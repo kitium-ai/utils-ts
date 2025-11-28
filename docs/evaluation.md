@@ -3,12 +3,14 @@
 This document reviews the current package against conventions commonly used by large-scale TypeScript utility libraries (e.g., lodash, ts-toolbelt, and internal big-tech shared utility stacks) and outlines improvements to strengthen consistency, reusability, and API ergonomics.
 
 ## Current strengths
+
 - **Clear feature surface**: README describes 74+ type utilities and 133 runtime helpers across arrays, objects, strings, async, validation, numbers, and dates, mirroring the breadth expected of mature utility kits.【F:README.md†L13-L122】
 - **Tree-shaking ready exports**: Package uses ESM with subpath exports for `types`, `runtime`, and `integrations`, and marks `sideEffects: false` for bundler friendliness.【F:package.json†L6-L31】
 - **Testing and tooling hooks**: Scripts cover build, lint, formatting, coverage, benches, and type tests—matching the automation discipline of large internal libraries.【F:package.json†L46-L74】
 
 ## Gaps compared to big-tech utility stacks
-- **API shape consistency**: Data-first functions coexist with options objects only sporadically (e.g., `chunk` throws an error for bad size rather than returning a Result-like object).【F:src/runtime/array.ts†L5-L190】 Teams at scale favor uniform signatures (data-first *and* data-last variants, options bags, predictable error channels) to reduce cognitive load.
+
+- **API shape consistency**: Data-first functions coexist with options objects only sporadically (e.g., `chunk` throws an error for bad size rather than returning a Result-like object).【F:src/runtime/array.ts†L5-L190】 Teams at scale favor uniform signatures (data-first _and_ data-last variants, options bags, predictable error channels) to reduce cognitive load.
 - **Subpath discoverability**: While exports exist for `types`, `runtime`, and `integrations`, there are no fine-grained subpaths (e.g., `@kitiumai/utils-ts/runtime/array`) to support smallest-possible bundles and clearer ownership boundaries—common in Google/Meta-style utility layers.【F:package.json†L10-L31】
 - **Runtime/type parity**: Type utilities and runtime helpers are documented separately, but there is no guidance or enforcement ensuring a runtime helper has a matching type-level helper (e.g., typed predicates returning type guards). Big-tech libraries often pair the two to enable exhaustiveness and safer refactors.
 - **Error semantics and observability**: Functions typically throw generic `Error` objects (e.g., `chunk` uses `new Error(...)`).【F:src/runtime/array.ts†L19-L29】 Larger platforms standardize error classes, logging hooks, and optional telemetry metadata to keep behavior predictable in production services.
@@ -16,6 +18,7 @@ This document reviews the current package against conventions commonly used by l
 - **Documentation depth**: README lists functions but lacks per-module API references, performance notes, and examples comparing data-first vs. data-last usage. Mature stacks expose a structured docs site and playground examples for common workflows.
 
 ## Recommendations
+
 1. **Codify API conventions**
    - Introduce guidelines for parameter order (data-first + curried data-last), mandatory options objects for configurable behavior, and consistent return shapes (e.g., `Result` or tagged unions for recoverable errors). Begin by refactoring high-usage helpers like `chunk`, `groupBy`, and `intersection` to follow the pattern, keeping existing signatures as wrappers for backward compatibility.【F:src/runtime/array.ts†L5-L190】
 

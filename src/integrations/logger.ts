@@ -15,6 +15,7 @@ export function createUtilLogger(_name: string): ILogger {
 /**
  * Logger decorator for timing function execution
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function withLogging<T extends (...args: any[]) => any>(fn: T, loggerName: string): T {
   const logger = createUtilLogger(loggerName);
 
