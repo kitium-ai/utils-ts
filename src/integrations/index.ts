@@ -3,5 +3,6 @@
  * Exports integrations with @kitiumai packages
  */
 
-export * from './logger';
-export * from './types';
+export * from './logger.js';
+export * from './types.js';
+export * from './error.js';

@@ -1,6 +1,6 @@
 {
   "name": "@kitiumai/utils-ts",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Comprehensive TypeScript utilities for KitiumAI projects",
   "license": "MIT",
   "type": "module",
@@ -87,6 +87,11 @@
       "types": "./dist/integrations/index.d.ts",
       "import": "./dist/integrations/index.js",
       "require": "./dist/integrations/index.cjs"
+    },
+    "./integrations/error": {
+      "types": "./dist/integrations/error.d.ts",
+      "import": "./dist/integrations/error.js",
+      "require": "./dist/integrations/error.cjs"
     }
   },
   "files": [
@@ -251,7 +256,7 @@
     "@kitiumai/logger": "^2.0.0"
   },
   "peerDependencies": {
-    "@kitiumai/error": "^1.0.0"
+    "@kitiumai/error": "^2.0.0"
   },
   "peerDependenciesMeta": {
     "@kitiumai/error": {

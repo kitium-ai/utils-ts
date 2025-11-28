@@ -9,6 +9,7 @@ This document shows actual bundle size results with different import patterns.
 ## Test Scenarios
 
 ### Scenario 1: Import Everything (❌ Not Recommended)
+
 ```typescript
 import * as Utils from '@kitiumai/utils-ts';
 
@@ -17,6 +18,7 @@ const result = Utils.chunk([1, 2, 3, 4], 2);
 ```
 
 **Bundle Result:**
+
 - ✅ All modules included
 - 📦 Bundle size: ~300 KB (all utilities)
 - ⚠️ Waste: ~95% unused code
@@ -24,6 +26,7 @@ const result = Utils.chunk([1, 2, 3, 4], 2);
 ---
 
 ### Scenario 2: Import Specific Module (✅ Recommended)
+
 ```typescript
 import { chunk, unique } from '@kitiumai/utils-ts/runtime/array';
 
@@ -32,6 +35,7 @@ const result2 = unique([1, 1, 2, 2, 3]);
 ```
 
 **Bundle Result:**
+
 - ✅ Only array module included
 - 📦 Bundle size: ~15 KB (just array utilities)
 - 🎉 Savings: **95%** reduction!
@@ -39,6 +43,7 @@ const result2 = unique([1, 1, 2, 2, 3]);
 ---
 
 ### Scenario 3: Multiple Specific Modules (✅ Good)
+
 ```typescript
 import { chunk } from '@kitiumai/utils-ts/runtime/array';
 import { pick } from '@kitiumai/utils-ts/runtime/object';
@@ -46,6 +51,7 @@ import { capitalize } from '@kitiumai/utils-ts/runtime/string';
 ```
 
 **Bundle Result:**
+
 - ✅ Only 3 modules included
 - 📦 Bundle size: ~45 KB (array + object + string)
 - 🎉 Savings: **85%** reduction!
@@ -53,6 +59,7 @@ import { capitalize } from '@kitiumai/utils-ts/runtime/string';
 ---
 
 ### Scenario 4: Type-Only Imports (✅ Best for Types)
+
 ```typescript
 import type { DeepPartial, Brand, NonEmptyArray } from '@kitiumai/utils-ts/types';
 
@@ -66,6 +73,7 @@ type PartialUser = DeepPartial<User>;
 ```
 
 **Bundle Result:**
+
 - ✅ No runtime code included
 - 📦 Bundle size: **0 bytes** (types erased at compile time)
 - 🎉 Savings: **100%** - pure compile-time!
@@ -73,6 +81,7 @@ type PartialUser = DeepPartial<User>;
 ---
 
 ### Scenario 5: Integration Modules (✅ Optional)
+
 ```typescript
 import { createUtilLogger } from '@kitiumai/utils-ts/integrations';
 
@@ -81,6 +90,7 @@ logger.info('Application started');
 ```
 
 **Bundle Result:**
+
 - ✅ Only integrations + logger dependency
 - 📦 Bundle size: ~30 KB (integrations + @kitiumai/logger)
 - 🎉 Optional: Only included when explicitly imported
@@ -89,18 +99,19 @@ logger.info('Application started');
 
 ## Side-by-Side Comparison
 
-| Import Style | Bundle Size | Code Included | Savings |
-|-------------|-------------|---------------|---------|
-| `import * from '@kitiumai/utils-ts'` | ~300 KB | All modules | 0% |
-| `import from '@kitiumai/utils-ts/runtime/array'` | ~15 KB | Array only | **95%** |
-| `import from '.../runtime/array' + '.../runtime/object'` | ~30 KB | 2 modules | **90%** |
-| `import type from '@kitiumai/utils-ts/types'` | 0 KB | Types only | **100%** |
+| Import Style                                             | Bundle Size | Code Included | Savings  |
+| -------------------------------------------------------- | ----------- | ------------- | -------- |
+| `import * from '@kitiumai/utils-ts'`                     | ~300 KB     | All modules   | 0%       |
+| `import from '@kitiumai/utils-ts/runtime/array'`         | ~15 KB      | Array only    | **95%**  |
+| `import from '.../runtime/array' + '.../runtime/object'` | ~30 KB      | 2 modules     | **90%**  |
+| `import type from '@kitiumai/utils-ts/types'`            | 0 KB        | Types only    | **100%** |
 
 ---
 
 ## Webpack Bundle Analysis Example
 
 ### Full Import Bundle
+
 ```javascript
 // webpack.config.js with full import
 import * as Utils from '@kitiumai/utils-ts';
@@ -112,6 +123,7 @@ import * as Utils from '@kitiumai/utils-ts';
 ```
 
 ### Granular Import Bundle
+
 ```javascript
 // webpack.config.js with granular imports
 import { chunk } from '@kitiumai/utils-ts/runtime/array';
@@ -129,6 +141,7 @@ import { pick } from '@kitiumai/utils-ts/runtime/object';
 ## Rollup Tree-Shake Analysis
 
 ### Input Code
+
 ```typescript
 import { chunk } from '@kitiumai/utils-ts/runtime/array';
 import { debounce } from '@kitiumai/utils-ts/runtime/function';
@@ -138,6 +151,7 @@ export const debouncedFn = debounce(() => console.log('hi'), 100);
 ```
 
 ### Rollup Output
+
 ```javascript
 // Only includes:
 // 1. chunk function from array module
@@ -160,18 +174,22 @@ export const debouncedFn = debounce(() => console.log('hi'), 100);
 ## Vite Build Analysis
 
 ### Development Mode
+
 ```typescript
 // All modules available for hot reload
 import { chunk } from '@kitiumai/utils-ts/runtime/array';
 ```
+
 - Fast HMR with granular modules
 - Only loads imported modules on demand
 
 ### Production Build
+
 ```typescript
 // Vite automatically tree-shakes
 import { chunk } from '@kitiumai/utils-ts/runtime/array';
 ```
+
 - Only includes used code
 - Dead code elimination
 - Minified output
@@ -183,6 +201,7 @@ import { chunk } from '@kitiumai/utils-ts/runtime/array';
 ## Real Application Example
 
 ### E-commerce App
+
 ```typescript
 // Only import what you need
 import { chunk } from '@kitiumai/utils-ts/runtime/array'; // Product pagination
@@ -200,12 +219,14 @@ import type { DeepPartial } from '@kitiumai/utils-ts/types'; // Form state
 ## Conclusion
 
 ### Tree-Shake Performance
+
 ✅ **90-95% bundle size reduction** with granular imports
 ✅ **100% reduction** for type-only imports
 ✅ **Zero runtime cost** for type utilities
 ✅ **Optimal** with 19+ entry points
 
 ### Verification Checklist
+
 - ✅ `sideEffects: false` configured
 - ✅ ESM format with CJS fallback
 - ✅ 19+ granular entry points
@@ -214,7 +235,9 @@ import type { DeepPartial } from '@kitiumai/utils-ts/types'; // Form state
 - ✅ Full type declarations
 
 ### Recommendation
+
 **Always use granular imports** for optimal bundle sizes:
+
 ```typescript
 ✅ import { fn } from '@kitiumai/utils-ts/runtime/[module]';
 ❌ import * from '@kitiumai/utils-ts';
@@ -225,4 +248,3 @@ import type { DeepPartial } from '@kitiumai/utils-ts/types'; // Form state
 **Package:** @kitiumai/utils-ts v2.0.0  
 **Tree-Shakeable:** ✅ VERIFIED  
 **Status:** Production Ready 🚀
-

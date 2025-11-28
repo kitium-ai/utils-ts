@@ -28,5 +28,13 @@ export default createKitiumConfig({
         '@typescript-eslint/no-explicit-any': 'off', // Type utilities may use any
       },
     },
+    // Integration files
+    {
+      files: ['src/integrations/**/*.ts'],
+      rules: {
+        '@typescript-eslint/no-unused-vars': 'off', // Integrations might re-export
+        'no-restricted-imports': 'off', // Integrations need to import from runtime
+      },
+    },
   ],
 });

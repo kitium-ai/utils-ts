@@ -1,10 +1,17 @@
-import { createRequire } from 'module';
 import type { ErrorStrategy } from './result.js';
 
-const require = createRequire(import.meta.url);
+/**
+ * Utility-specific error codes
+ */
+export type UtilsErrorCode =
+  | 'INVALID_CHUNK_SIZE'
+  | 'GROUP_BY_KEY_MISSING'
+  | 'INVALID_ARGUMENT'
+  | 'OPERATION_FAILED';
 
-export type UtilsErrorCode = 'INVALID_CHUNK_SIZE' | 'GROUP_BY_KEY_MISSING';
-
+/**
+ * Error initialization options for utility errors
+ */
 export interface UtilsErrorInit {
   code: UtilsErrorCode;
   message: string;
@@ -12,6 +19,9 @@ export interface UtilsErrorInit {
   cause?: unknown;
 }
 
+/**
+ * Base error class for utils-ts package
+ */
 export class UtilsError extends Error {
   readonly code: UtilsErrorCode;
   readonly details: Record<string, unknown> | undefined;
@@ -25,41 +35,61 @@ export class UtilsError extends Error {
       this.cause = init.cause;
     }
   }
+
+  /**
+   * Convert to JSON representation
+   */
+  toJSON(): Record<string, unknown> {
+    return {
+      name: this.name,
+      code: this.code,
+      message: this.message,
+      ...(this.details ? { details: this.details } : {}),
+      ...(this.cause ? { cause: this.cause } : {}),
+    };
+  }
 }
 
-type ErrorFactory = (init: UtilsErrorInit) => Error;
-
-let externalFactory: ErrorFactory | null = null;
-
-try {
-  // Dynamically wire the optional @kitiumai/error package if present.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { createError } = require('@kitiumai/error') as any;
-  if (createError) {
-    externalFactory = (init) =>
-      createError({
-        name: 'UtilsError',
-        code: init.code,
-        message: init.message,
-        cause: init.cause,
-        meta: init.details,
-      });
-  }
-} catch {
-  // Ignore if the optional dependency is not installed.
-}
-
-export const setErrorFactory = (factory: ErrorFactory): void => {
-  externalFactory = factory;
-};
-
-export const createUtilsError = (init: UtilsErrorInit): Error => {
-  if (externalFactory) {
-    return externalFactory(init);
-  }
+/**
+ * Create a utility error
+ */
+export const createUtilsError = (init: UtilsErrorInit): UtilsError => {
   return new UtilsError(init);
 };
 
+/**
+ * Error handling options for utilities
+ */
 export interface ErrorHandlingOptions {
   onError?: ErrorStrategy;
+}
+
+/**
+ * Check if an error is a UtilsError
+ */
+export function isUtilsError(error: unknown): error is UtilsError {
+  return error instanceof UtilsError;
+}
+
+/**
+ * Extract error message from unknown error
+ */
+export function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  if (typeof error === 'string') {
+    return error;
+  }
+  return 'Unknown error';
+}
+
+/**
+ * Extract error stack from unknown error
+ */
+export function getErrorStack(error: unknown): string | undefined {
+  if (error instanceof Error) {
+    return error.stack;
+  }
+  return undefined;
 }
