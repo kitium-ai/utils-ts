@@ -172,7 +172,7 @@
     "@kitiumai/logger": "^2.0.0"
   },
   "peerDependencies": {
-    "@kitiumai/error": "^2.0.0"
+    "@kitiumai/error": "^1.0.0"
   },
   "peerDependenciesMeta": {
     "@kitiumai/error": {
