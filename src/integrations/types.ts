@@ -6,8 +6,8 @@
 // Re-export commonly used types from @kitiumai/types
 export type { IsoDateTimeString } from '@kitiumai/types/primitives';
 
-// Import Brand from local types (already defined in ./types/branded)
-import type { Brand } from '../types/branded.js';
+// Local Brand type definition (mirrors @kitiumai/types/branded)
+type Brand<T, B extends string> = T & { readonly $brand: B };
 
 /**
  * Type guard to check if a value is branded
@@ -33,7 +33,7 @@ export function unbrand<T, B extends string>(value: Brand<T, B>): T {
 /**
  * Type-safe ID utilities using branded types
  */
-export const IdUtils = {
+export const idUtils = {
   /**
    * Create a branded ID from a string
    */
@@ -59,7 +59,7 @@ export const IdUtils = {
 /**
  * Email validation utilities using @kitiumai/types
  */
-export const EmailUtils = {
+export const emailUtils = {
   /**
    * Basic email validation regex
    */

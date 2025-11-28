@@ -14,7 +14,7 @@ export interface UtilsErrorInit {
 
 export class UtilsError extends Error {
   readonly code: UtilsErrorCode;
-  readonly details?: Record<string, unknown>;
+  readonly details: Record<string, unknown> | undefined;
 
   constructor(init: UtilsErrorInit) {
     super(init.message);
@@ -22,7 +22,6 @@ export class UtilsError extends Error {
     this.code = init.code;
     this.details = init.details;
     if (init.cause) {
-      // @ts-expect-error cause is available in modern runtimes
       this.cause = init.cause;
     }
   }
@@ -34,9 +33,8 @@ let externalFactory: ErrorFactory | null = null;
 
 try {
   // Dynamically wire the optional @kitiumai/error package if present.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  // @ts-expect-error Optional external dependency
-  const { createError } = require('@kitiumai/error');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { createError } = require('@kitiumai/error') as any;
   if (createError) {
     externalFactory = (init) =>
       createError({

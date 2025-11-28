@@ -135,9 +135,9 @@ import type { Result as ResultType } from '@kitiumai/utils-ts/types/result';
 
 ### Array API quick reference
 
-| Helper | Data-first | Data-last | Error channel |
-| --- | --- | --- | --- |
-| `chunk` | `chunk(items, sizeOrOptions)` | `chunk(sizeOrOptions)(items)` | `onError: 'return'` yields `{ ok: false, error }` |
+| Helper    | Data-first                          | Data-last                           | Error channel                                         |
+| --------- | ----------------------------------- | ----------------------------------- | ----------------------------------------------------- |
+| `chunk`   | `chunk(items, sizeOrOptions)`       | `chunk(sizeOrOptions)(items)`       | `onError: 'return'` yields `{ ok: false, error }`     |
 | `groupBy` | `groupBy(items, selectorOrOptions)` | `groupBy(selectorOrOptions)(items)` | `onError: 'return'` when selector returns `undefined` |
 
 ## Testing

@@ -2,8 +2,7 @@
  * Array utility functions
  */
 
-import { createUtilsError } from './error.js';
-import type { ErrorHandlingOptions } from './error.js';
+import { createUtilsError, type ErrorHandlingOptions } from './error.js';
 import { err, ok, type ErrorStrategy, type Result } from './result.js';
 
 interface ChunkOptions extends ErrorHandlingOptions {
@@ -41,7 +40,7 @@ const handleChunkError = <T>(
   });
 
   if (options.onError === 'return') {
-    return err(error);
+    return err(error) as unknown as ChunkReturn<T, { onError: ErrorStrategy }>;
   }
 
   throw error;
@@ -85,7 +84,8 @@ export function chunk<T>(
 ): T[][] | Result<T[][]> | ((array: T[]) => T[][] | Result<T[][]>) {
   if (!Array.isArray(arrayOrOptions)) {
     const normalized = normalizeChunkOptions(arrayOrOptions as number | ChunkOptions);
-    return (array: T[]) => chunk(array, normalized);
+    return (array: T[]) =>
+      chunk(array, normalized as ChunkOptions & { onError?: 'throw' | undefined });
   }
 
   const array = arrayOrOptions;
@@ -129,19 +129,25 @@ interface GroupByOptions<T> extends ErrorHandlingOptions {
   allowUndefined?: boolean;
 }
 
-type GroupByReturn<T, O> = O extends { onError: 'return' } ? Result<Record<string, T[]>> : Record<string, T[]>;
+type GroupByReturn<T, O> = O extends { onError: 'return' }
+  ? Result<Record<string, T[]>>
+  : Record<string, T[]>;
 
 const normalizeGroupByOptions = <T>(
   selectorOrOptions: keyof T | ((item: T) => string | number | undefined) | GroupByOptions<T>
 ): GroupByOptions<T> => {
-  if (typeof selectorOrOptions === 'function' || typeof selectorOrOptions === 'string' || typeof selectorOrOptions === 'number') {
+  if (
+    typeof selectorOrOptions === 'function' ||
+    typeof selectorOrOptions === 'string' ||
+    typeof selectorOrOptions === 'number'
+  ) {
     return { selector: selectorOrOptions, allowUndefined: false, onError: 'throw' };
   }
 
   return {
     allowUndefined: false,
     onError: 'throw',
-    ...selectorOrOptions,
+    ...(selectorOrOptions as GroupByOptions<T>),
   } as GroupByOptions<T>;
 };
 
@@ -153,7 +159,10 @@ const normalizeGroupByOptions = <T>(
  * `Result` is returned instead of throwing if a selector resolves to
  * `undefined` and `allowUndefined` is not enabled.
  */
-export function groupBy<T>(array: T[], selector: keyof T | ((item: T) => string | number | undefined)): Record<string, T[]>;
+export function groupBy<T>(
+  array: T[],
+  selector: keyof T | ((item: T) => string | number | undefined)
+): Record<string, T[]>;
 export function groupBy<T, O extends GroupByOptions<T> & { onError?: 'throw' | undefined }>(
   array: T[],
   options: O
@@ -164,10 +173,14 @@ export function groupBy<T>(
 export function groupBy<T>(
   arrayOrSelector: T[] | (keyof T | ((item: T) => string | number | undefined) | GroupByOptions<T>),
   selectorOrOptions?: keyof T | ((item: T) => string | number | undefined) | GroupByOptions<T>
-): Record<string, T[]> | Result<Record<string, T[]>> | ((array: T[]) => Record<string, T[]> | Result<Record<string, T[]>>) {
+):
+  | Record<string, T[]>
+  | Result<Record<string, T[]>>
+  | ((array: T[]) => Record<string, T[]> | Result<Record<string, T[]>>) {
   if (!Array.isArray(arrayOrSelector)) {
     const normalized = normalizeGroupByOptions<T>(arrayOrSelector);
-    return (array: T[]) => groupBy(array, normalized);
+    return (array: T[]) =>
+      groupBy(array, normalized as GroupByOptions<T> & { onError?: 'throw' | undefined });
   }
 
   const array = arrayOrSelector;
