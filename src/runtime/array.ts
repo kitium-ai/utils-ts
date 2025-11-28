@@ -2,30 +2,112 @@
  * Array utility functions
  */
 
+import { createUtilsError } from './error.js';
+import type { ErrorHandlingOptions } from './error.js';
+import { err, ok, type ErrorStrategy, type Result } from './result.js';
+
+interface ChunkOptions extends ErrorHandlingOptions {
+  size: number;
+  label?: string;
+}
+
+type ChunkReturn<T, O> = O extends { onError: 'return' } ? Result<T[][]> : T[][];
+
+const normalizeChunkOptions = (sizeOrOptions: number | ChunkOptions | undefined): ChunkOptions => {
+  if (typeof sizeOrOptions === 'number') {
+    return { size: sizeOrOptions, onError: 'throw' };
+  }
+
+  return {
+    onError: 'throw',
+    ...sizeOrOptions,
+  } as ChunkOptions;
+};
+
+const handleChunkError = <T>(
+  options: ChunkOptions,
+  cause: Error
+): ChunkReturn<T, { onError: ErrorStrategy }> => {
+  const error = createUtilsError({
+    code: 'INVALID_CHUNK_SIZE',
+    message: options.label
+      ? `Chunk size must be greater than 0 for ${options.label}`
+      : 'Chunk size must be greater than 0',
+    details: {
+      size: options.size,
+      label: options.label,
+    },
+    cause,
+  });
+
+  if (options.onError === 'return') {
+    return err(error);
+  }
+
+  throw error;
+};
+
 /**
- * Split array into chunks of specified size
+ * Split array into chunks of specified size with unified error handling.
+ *
+ * Supports data-first usage (`chunk(items, options)`) and data-last/curried
+ * usage (`chunk(options)(items)`). Set `onError: 'return'` to get a Result
+ * instead of throwing.
  *
  * @template T - The type of array elements
  * @param array - The array to chunk
- * @param size - The size of each chunk
- * @returns An array of chunks
- * @throws {Error} If size is less than or equal to 0
+ * @param sizeOrOptions - Size or options bag controlling chunking and errors
+ * @returns An array of chunks or a Result when `onError` is set to `return`
  *
  * @example
  * ```ts
+ * // data-first
  * chunk([1, 2, 3, 4, 5], 2) // [[1, 2], [3, 4], [5]]
+ *
+ * // data-last / curried
+ * const byThree = chunk<number>({ size: 3 });
+ * byThree([1, 2, 3, 4]); // [[1, 2, 3], [4]]
+ *
+ * // structured error channel
+ * const result = chunk([1, 2], { size: 0, onError: 'return', label: 'example' });
+ * if (!result.ok) console.log(result.error);
  * ```
  */
-export function chunk<T>(array: T[], size: number): T[][] {
-  if (size <= 0) {
-    throw new Error('Chunk size must be greater than 0');
+export function chunk<T>(array: T[], size: number): T[][];
+export function chunk<T, O extends ChunkOptions & { onError?: 'throw' | undefined }>(
+  array: T[],
+  options: O
+): ChunkReturn<T, O>;
+export function chunk<T>(options: number | ChunkOptions): (array: T[]) => T[][] | Result<T[][]>;
+export function chunk<T>(
+  arrayOrOptions: T[] | number | ChunkOptions,
+  sizeOrOptions?: number | ChunkOptions
+): T[][] | Result<T[][]> | ((array: T[]) => T[][] | Result<T[][]>) {
+  if (!Array.isArray(arrayOrOptions)) {
+    const normalized = normalizeChunkOptions(arrayOrOptions as number | ChunkOptions);
+    return (array: T[]) => chunk(array, normalized);
+  }
+
+  const array = arrayOrOptions;
+  const options = normalizeChunkOptions(sizeOrOptions as number | ChunkOptions);
+
+  if (typeof options.size !== 'number' || Number.isNaN(options.size)) {
+    return handleChunkError<T>(
+      { ...options, size: Number.isNaN(options.size) ? NaN : (options.size as number) },
+      new Error('Size must be a valid number')
+    );
+  }
+
+  if (options.size <= 0) {
+    return handleChunkError<T>(options, new Error('Size must be positive'));
   }
 
   const result: T[][] = [];
-  for (let i = 0; i < array.length; i += size) {
-    result.push(array.slice(i, i + size));
+  for (let i = 0; i < array.length; i += options.size) {
+    result.push(array.slice(i, i + options.size));
   }
-  return result;
+
+  return options.onError === 'return' ? ok(result) : result;
 }
 
 /**
@@ -42,22 +124,97 @@ export function chunk<T>(array: T[], size: number): T[][] {
  * // { a: [{ type: 'a', value: 1 }], b: [{ type: 'b', value: 2 }] }
  * ```
  */
-export function groupBy<T>(
-  array: T[],
-  keyOrFn: keyof T | ((item: T) => string | number)
-): Record<string, T[]> {
-  const result: Record<string, T[]> = {};
+interface GroupByOptions<T> extends ErrorHandlingOptions {
+  selector: keyof T | ((item: T) => string | number | undefined);
+  allowUndefined?: boolean;
+}
 
-  for (const item of array) {
-    const key = typeof keyOrFn === 'function' ? String(keyOrFn(item)) : String(item[keyOrFn]);
+type GroupByReturn<T, O> = O extends { onError: 'return' } ? Result<Record<string, T[]>> : Record<string, T[]>;
 
-    if (!result[key]) {
-      result[key] = [];
-    }
-    result[key].push(item);
+const normalizeGroupByOptions = <T>(
+  selectorOrOptions: keyof T | ((item: T) => string | number | undefined) | GroupByOptions<T>
+): GroupByOptions<T> => {
+  if (typeof selectorOrOptions === 'function' || typeof selectorOrOptions === 'string' || typeof selectorOrOptions === 'number') {
+    return { selector: selectorOrOptions, allowUndefined: false, onError: 'throw' };
   }
 
-  return result;
+  return {
+    allowUndefined: false,
+    onError: 'throw',
+    ...selectorOrOptions,
+  } as GroupByOptions<T>;
+};
+
+/**
+ * Group array items by a key or selector with predictable error semantics.
+ *
+ * Supports data-first (`groupBy(array, selector)`) and data-last/curried
+ * (`groupBy(selector)(array)`) usage. When `onError` is set to `return`, a
+ * `Result` is returned instead of throwing if a selector resolves to
+ * `undefined` and `allowUndefined` is not enabled.
+ */
+export function groupBy<T>(array: T[], selector: keyof T | ((item: T) => string | number | undefined)): Record<string, T[]>;
+export function groupBy<T, O extends GroupByOptions<T> & { onError?: 'throw' | undefined }>(
+  array: T[],
+  options: O
+): GroupByReturn<T, O>;
+export function groupBy<T>(
+  selector: keyof T | ((item: T) => string | number | undefined) | GroupByOptions<T>
+): (array: T[]) => Record<string, T[]> | Result<Record<string, T[]>>;
+export function groupBy<T>(
+  arrayOrSelector: T[] | (keyof T | ((item: T) => string | number | undefined) | GroupByOptions<T>),
+  selectorOrOptions?: keyof T | ((item: T) => string | number | undefined) | GroupByOptions<T>
+): Record<string, T[]> | Result<Record<string, T[]>> | ((array: T[]) => Record<string, T[]> | Result<Record<string, T[]>>) {
+  if (!Array.isArray(arrayOrSelector)) {
+    const normalized = normalizeGroupByOptions<T>(arrayOrSelector);
+    return (array: T[]) => groupBy(array, normalized);
+  }
+
+  const array = arrayOrSelector;
+  const options = normalizeGroupByOptions<T>(selectorOrOptions as GroupByOptions<T>);
+  const result: Record<string, T[]> = {};
+
+  if (options.selector === undefined) {
+    const error = createUtilsError({
+      code: 'GROUP_BY_KEY_MISSING',
+      message: 'groupBy requires a selector or property key',
+      details: {},
+    });
+
+    if (options.onError === 'return') {
+      return err(error);
+    }
+
+    throw error;
+  }
+
+  for (const item of array) {
+    const keyOrValue = options.selector;
+    const key = typeof keyOrValue === 'function' ? keyOrValue(item) : (item as T)[keyOrValue];
+
+    if ((key === undefined || key === null) && !options.allowUndefined) {
+      const error = createUtilsError({
+        code: 'GROUP_BY_KEY_MISSING',
+        message: 'groupBy selector returned an undefined key',
+        details: { item },
+      });
+
+      if (options.onError === 'return') {
+        return err(error);
+      }
+
+      throw error;
+    }
+
+    const keyAsString = String(key);
+
+    if (!result[keyAsString]) {
+      result[keyAsString] = [];
+    }
+    result[keyAsString].push(item);
+  }
+
+  return options.onError === 'return' ? ok(result) : result;
 }
 
 /**

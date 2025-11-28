@@ -10,3 +10,5 @@ export * from './async.js';
 export * from './validation.js';
 export * from './number.js';
 export * from './date.js';
+export * from './result.js';
+export * from './error.js';

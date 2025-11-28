@@ -40,6 +40,59 @@ describe('array', () => {
     it('should throw for invalid size', () => {
       expect(() => chunk([1, 2, 3], 0)).toThrow();
     });
+
+    it('should support data-last usage', () => {
+      const byThree = chunk<number>({ size: 3 });
+      expect(byThree([1, 2, 3, 4])).toEqual([[1, 2, 3], [4]]);
+    });
+
+    it('should return structured error when onError is set to return', () => {
+      const result = chunk([1, 2], { size: 0, onError: 'return', label: 'test' });
+      expect(result).toEqual({
+        ok: false,
+        error: expect.any(Error),
+      });
+    });
+  });
+
+  describe('groupBy', () => {
+    it('should group items by key', () => {
+      const items = [
+        { type: 'a', value: 1 },
+        { type: 'b', value: 2 },
+      ];
+      expect(groupBy(items, 'type')).toEqual({
+        a: [{ type: 'a', value: 1 }],
+        b: [{ type: 'b', value: 2 }],
+      });
+    });
+
+    it('should support curried usage with selector', () => {
+      const byType = groupBy<{ type: string; value: number }>('type');
+      expect(
+        byType([
+          { type: 'a', value: 1 },
+          { type: 'a', value: 2 },
+        ])
+      ).toEqual({
+        a: [
+          { type: 'a', value: 1 },
+          { type: 'a', value: 2 },
+        ],
+      });
+    });
+
+    it('should surface error through Result channel when selector returns undefined', () => {
+      const result = groupBy(
+        [
+          { type: undefined, value: 1 },
+          { type: 'ok', value: 2 },
+        ],
+        { selector: (item) => item.type, onError: 'return' }
+      );
+
+      expect(result).toEqual({ ok: false, error: expect.any(Error) });
+    });
   });
 
   describe('compact', () => {

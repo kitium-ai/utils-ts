@@ -18,10 +18,70 @@
       "import": "./dist/types/index.js",
       "require": "./dist/types/index.cjs"
     },
+    "./types/array": {
+      "types": "./dist/types/array.d.ts",
+      "import": "./dist/types/array.js",
+      "require": "./dist/types/array.cjs"
+    },
+    "./types/result": {
+      "types": "./dist/types/result.d.ts",
+      "import": "./dist/types/result.js",
+      "require": "./dist/types/result.cjs"
+    },
     "./runtime": {
       "types": "./dist/runtime/index.d.ts",
       "import": "./dist/runtime/index.js",
       "require": "./dist/runtime/index.cjs"
+    },
+    "./runtime/array": {
+      "types": "./dist/runtime/array.d.ts",
+      "import": "./dist/runtime/array.js",
+      "require": "./dist/runtime/array.cjs"
+    },
+    "./runtime/object": {
+      "types": "./dist/runtime/object.d.ts",
+      "import": "./dist/runtime/object.js",
+      "require": "./dist/runtime/object.cjs"
+    },
+    "./runtime/function": {
+      "types": "./dist/runtime/function.d.ts",
+      "import": "./dist/runtime/function.js",
+      "require": "./dist/runtime/function.cjs"
+    },
+    "./runtime/string": {
+      "types": "./dist/runtime/string.d.ts",
+      "import": "./dist/runtime/string.js",
+      "require": "./dist/runtime/string.cjs"
+    },
+    "./runtime/async": {
+      "types": "./dist/runtime/async.d.ts",
+      "import": "./dist/runtime/async.js",
+      "require": "./dist/runtime/async.cjs"
+    },
+    "./runtime/validation": {
+      "types": "./dist/runtime/validation.d.ts",
+      "import": "./dist/runtime/validation.js",
+      "require": "./dist/runtime/validation.cjs"
+    },
+    "./runtime/number": {
+      "types": "./dist/runtime/number.d.ts",
+      "import": "./dist/runtime/number.js",
+      "require": "./dist/runtime/number.cjs"
+    },
+    "./runtime/date": {
+      "types": "./dist/runtime/date.d.ts",
+      "import": "./dist/runtime/date.js",
+      "require": "./dist/runtime/date.cjs"
+    },
+    "./runtime/result": {
+      "types": "./dist/runtime/result.d.ts",
+      "import": "./dist/runtime/result.js",
+      "require": "./dist/runtime/result.cjs"
+    },
+    "./runtime/error": {
+      "types": "./dist/runtime/error.d.ts",
+      "import": "./dist/runtime/error.js",
+      "require": "./dist/runtime/error.cjs"
     },
     "./integrations": {
       "types": "./dist/integrations/index.d.ts",
@@ -110,5 +170,13 @@
   "dependencies": {
     "@kitiumai/types": "^2.0.0",
     "@kitiumai/logger": "^2.0.0"
+  },
+  "peerDependencies": {
+    "@kitiumai/error": "^2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@kitiumai/error": {
+      "optional": true
+    }
   }
 }

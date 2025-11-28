@@ -59,15 +59,29 @@ type AB = Merge<A, B>; // { x: number; y: string }
 
 // Template literal types
 type Result = CamelCase<'hello_world'>; // 'helloWorld'
+
+// Result type pairing with runtime helpers
+import type { Result as UtilsResult } from '@kitiumai/utils-ts/types/result';
+type SafeValue = UtilsResult<string>;
 ```
 
 ### Runtime Utilities
 
 ```typescript
-import { chunk, debounce, deepMerge, retry } from '@kitiumai/utils-ts';
+import { chunk, debounce, deepMerge, groupBy, retry } from '@kitiumai/utils-ts';
 
 // Array utilities
 const chunks = chunk([1, 2, 3, 4, 5], 2); // [[1, 2], [3, 4], [5]]
+
+// Data-last usage and structured errors
+const safeChunks = chunk([1, 2, 3], { size: 0, onError: 'return', label: 'payload' });
+if (!safeChunks.ok) console.error(safeChunks.error);
+
+const byType = groupBy<{ type: string; value: number }>('type');
+const grouped = byType([
+  { type: 'a', value: 1 },
+  { type: 'b', value: 2 },
+]);
 
 // Function utilities
 const debouncedFn = debounce(() => console.log('Called!'), 300);
@@ -85,7 +99,26 @@ await retry(
 );
 ```
 
-## Tree-Shaking
+## API conventions and structured errors
+
+- **Data-first and data-last**: Most helpers provide both call styles via overloads (e.g., `chunk(items, opts)` and `chunk(opts)(items)`).
+- **Options bags**: Configurable helpers use options objects for clarity, keeping positional arguments minimal.
+- **Result channels**: Set `onError: 'return'` to receive `{ ok: false; error }` without throwing; defaults stay backward compatible.
+- **Optional @kitiumai/error integration**: Use `setErrorFactory` to wire the `createError` helper from `@kitiumai/error` for standardized error metadata.
+
+```ts
+import { chunk, groupBy, setErrorFactory } from '@kitiumai/utils-ts/runtime';
+import { createError } from '@kitiumai/error';
+
+setErrorFactory((init) => createError({ name: 'UtilsError', ...init }));
+
+const result = chunk([1, 2], { size: 0, onError: 'return' });
+if (!result.ok) {
+  console.warn(result.error);
+}
+```
+
+## Tree-Shaking and granular imports
 
 This package is fully tree-shakeable. Import only what you need:
 
@@ -93,7 +126,19 @@ This package is fully tree-shakeable. Import only what you need:
 // Import specific utilities
 import { chunk } from '@kitiumai/utils-ts/runtime';
 import type { DeepPartial } from '@kitiumai/utils-ts/types';
+
+// Granular subpaths for tighter bundles
+import { chunk as chunkArray } from '@kitiumai/utils-ts/runtime/array';
+import { Result } from '@kitiumai/utils-ts/runtime/result';
+import type { Result as ResultType } from '@kitiumai/utils-ts/types/result';
 ```
+
+### Array API quick reference
+
+| Helper | Data-first | Data-last | Error channel |
+| --- | --- | --- | --- |
+| `chunk` | `chunk(items, sizeOrOptions)` | `chunk(sizeOrOptions)(items)` | `onError: 'return'` yields `{ ok: false, error }` |
+| `groupBy` | `groupBy(items, selectorOrOptions)` | `groupBy(selectorOrOptions)(items)` | `onError: 'return'` when selector returns `undefined` |
 
 ## Testing
 
