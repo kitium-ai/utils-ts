@@ -29,4 +29,3 @@ describe('array benchmarks', () => {
     flattenDeep(nested);
   });
 });
-

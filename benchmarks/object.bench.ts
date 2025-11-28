@@ -21,4 +21,3 @@ describe('object benchmarks', () => {
     isEqual(largeObj, { ...largeObj });
   });
 });
-

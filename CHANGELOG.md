@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Runtime Utilities
 
 **Array Utilities (27 functions)**
+
 - `chunk` - Split array into chunks of specified size
 - `groupBy` - Group array items by a key or function
 - `unique` - Remove duplicate values from array
@@ -43,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `keyBy` - Create an object from an array using a key
 
 **Object Utilities (20 functions)**
+
 - `deepMerge` - Deep merge objects
 - `deepClone` - Deep clone an object
 - `pick` - Pick specific properties from object
@@ -65,6 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `size` - Get the size of a collection (array, string, or object)
 
 **String Utilities (20 functions)**
+
 - `camelCase` - Convert string to camelCase
 - `pascalCase` - Convert string to PascalCase
 - `kebabCase` - Convert string to kebab-case
@@ -88,6 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `unescapeHtml` - Unescape HTML entities
 
 **Function Utilities (13 functions)**
+
 - `compose` - Compose functions from right to left
 - `pipe` - Pipe functions from left to right
 - `debounce` - Debounce function execution
@@ -103,6 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `noop` - No-op function (does nothing)
 
 **Async Utilities (11 functions)**
+
 - `sleep` - Sleep for specified milliseconds
 - `retry` - Retry async function with exponential backoff
 - `timeout` - Add timeout to promise
@@ -116,6 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `deferred` - Defer promise creation
 
 **Validation Utilities (13 functions)**
+
 - `isString` - Check if value is a string
 - `isNumber` - Check if value is a number (and not NaN)
 - `isBoolean` - Check if value is a boolean
@@ -131,6 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `isInteger` - Check if value is an integer
 
 **Number Utilities (10 functions)**
+
 - `clamp` - Clamp a number between min and max values
 - `random` - Generate a random number between min and max
 - `randomInt` - Generate a random integer between min and max
@@ -143,6 +150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `maxBy` - Find the item with the maximum value according to a function
 
 **Date Utilities (19 functions)**
+
 - `formatDate` - Format a date to a string
 - `parseDate` - Parse a date string
 - `addDays` - Add days to a date
@@ -164,6 +172,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Type Utilities
 
 **Utility Types (30+ types)**
+
 - `DeepPartial` - Make all properties in T optional, recursively
 - `DeepReadonly` - Make all properties in T readonly, recursively
 - `DeepRequired` - Make all properties in T required, recursively
@@ -188,6 +197,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Intersection` - Extract properties that exist in both types
 
 **Conditional Types (15+ types)**
+
 - `If` - Conditional type helper: If-Then-Else
 - `IsEqual` - Check if two types are equal
 - `IsAny` - Check if type is any
@@ -203,6 +213,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `IsUnion` - Returns true if T is a union type
 
 **Template Literal Types (15+ types)**
+
 - `CamelCase` - Convert string to camelCase
 - `PascalCase` - Convert string to PascalCase
 - `KebabCase` - Convert string to kebab-case
@@ -218,11 +229,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Includes` - Check if string includes substring
 
 **Branded Types (3 types)**
+
 - `Brand` - Create a branded type from a base type
 - `Opaque` - Create an opaque type alias
 - `Unbrand` - Unwrap a branded or opaque type to its base type
 
 **Array Types (11 types)**
+
 - `ArrayElement` - Extract the element type from an array type
 - `ArrayLength` - Get the length of an array type
 - `Head` - Get the first element of an array type
@@ -288,6 +301,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Summary
 
 This initial release provides:
+
 - **133 runtime utility functions** across 8 categories
 - **74+ type utilities** for advanced TypeScript type manipulation
 - **100% JSDoc documentation coverage**
@@ -296,4 +310,3 @@ This initial release provides:
 - **Production-ready** code quality and type safety
 
 [1.0.0]: https://github.com/kitiumai/utils-ts/releases/tag/v1.0.0
-

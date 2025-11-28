@@ -91,7 +91,15 @@ describe('array', () => {
 
   describe('unzip', () => {
     it('should separate pairs into arrays', () => {
-      expect(unzip([[1, 'a'], [2, 'b']])).toEqual([[1, 2], ['a', 'b']]);
+      expect(
+        unzip([
+          [1, 'a'],
+          [2, 'b'],
+        ])
+      ).toEqual([
+        [1, 2],
+        ['a', 'b'],
+      ]);
     });
   });
 
@@ -165,4 +173,3 @@ describe('array', () => {
     });
   });
 });
-

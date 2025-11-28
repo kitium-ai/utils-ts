@@ -52,7 +52,12 @@ describe('object', () => {
 
   describe('fromPairs', () => {
     it('should create object from pairs', () => {
-      expect(fromPairs([['a', 1], ['b', 2]])).toEqual({ a: 1, b: 2 });
+      expect(
+        fromPairs([
+          ['a', 1],
+          ['b', 2],
+        ])
+      ).toEqual({ a: 1, b: 2 });
     });
   });
 
@@ -84,4 +89,3 @@ describe('object', () => {
     });
   });
 });
-

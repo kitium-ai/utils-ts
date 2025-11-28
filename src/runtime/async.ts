@@ -88,7 +88,11 @@ export async function concurrency<T, R>(
   const executing: Promise<void>[] = [];
 
   for (let i = 0; i < items.length; i++) {
-    const promise = fn(items[i]).then((result) => {
+    const item = items[i];
+    if (item === undefined) {
+      continue;
+    }
+    const promise = fn(item).then((result) => {
       results[i] = result;
     });
 
