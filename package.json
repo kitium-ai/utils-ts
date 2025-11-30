@@ -1,6 +1,6 @@
 {
   "name": "@kitiumai/utils-ts",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Comprehensive TypeScript utilities for KitiumAI projects",
   "license": "MIT",
   "type": "module",
@@ -27,6 +27,26 @@
       "types": "./dist/types/result.d.ts",
       "import": "./dist/types/result.js",
       "require": "./dist/types/result.cjs"
+    },
+    "./types/branded": {
+      "types": "./dist/types/branded.d.ts",
+      "import": "./dist/types/branded.js",
+      "require": "./dist/types/branded.cjs"
+    },
+    "./types/conditionals": {
+      "types": "./dist/types/conditionals.d.ts",
+      "import": "./dist/types/conditionals.js",
+      "require": "./dist/types/conditionals.cjs"
+    },
+    "./types/template": {
+      "types": "./dist/types/template.d.ts",
+      "import": "./dist/types/template.js",
+      "require": "./dist/types/template.cjs"
+    },
+    "./types/utility": {
+      "types": "./dist/types/utility.d.ts",
+      "import": "./dist/types/utility.js",
+      "require": "./dist/types/utility.cjs"
     },
     "./runtime": {
       "types": "./dist/runtime/index.d.ts",
@@ -92,6 +112,16 @@
       "types": "./dist/integrations/error.d.ts",
       "import": "./dist/integrations/error.js",
       "require": "./dist/integrations/error.cjs"
+    },
+    "./integrations/logger": {
+      "types": "./dist/integrations/logger.d.ts",
+      "import": "./dist/integrations/logger.js",
+      "require": "./dist/integrations/logger.cjs"
+    },
+    "./integrations/types": {
+      "types": "./dist/integrations/types.d.ts",
+      "import": "./dist/integrations/types.js",
+      "require": "./dist/integrations/types.cjs"
     }
   },
   "files": [
@@ -239,10 +269,10 @@
     "access": "public"
   },
   "devDependencies": {
-    "@kitiumai/config": "^2.0.0",
-    "@kitiumai/lint": "^2.0.0",
+    "@kitiumai/config": "^2.0.1",
+    "@kitiumai/lint": "^2.0.1",
     "@kitiumai/scripts": "^1.0.0",
-    "@kitiumai/vitest-helpers": "^2.0.0",
+    "@kitiumai/vitest-helpers": "^2.0.1",
     "@types/node": "^24.10.1",
     "@vitest/ui": "^2.0.0",
     "eslint": "^9.15.0",
@@ -252,11 +282,11 @@
     "vitest": "^2.0.0"
   },
   "dependencies": {
-    "@kitiumai/types": "^2.0.0",
-    "@kitiumai/logger": "^2.0.0"
+    "@kitiumai/types": "^2.0.1",
+    "@kitiumai/logger": "^2.0.1"
   },
   "peerDependencies": {
-    "@kitiumai/error": "^2.0.0"
+    "@kitiumai/error": "^2.0.1"
   },
   "peerDependenciesMeta": {
     "@kitiumai/error": {

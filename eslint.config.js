@@ -7,6 +7,7 @@ import { createKitiumConfig } from '@kitiumai/lint';
 
 export default createKitiumConfig({
   baseConfig: baseConfig,
+  ignorePatterns: ['dist/**', '**/*.d.ts', '**/*.d.cts'],
   additionalRules: {
     // Utils package specific rules
     '@typescript-eslint/no-explicit-any': 'error',
