@@ -336,12 +336,12 @@
   "author": "KitiumAI",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kitiumai/utils-ts.git"
+    "url": "https://github.com/kitium-ai/utils-ts.git"
   },
   "bugs": {
-    "url": "https://github.com/kitiumai/utils-ts/issues"
+    "url": "https://github.com/kitium-ai/utils-ts/issues"
   },
-  "homepage": "https://github.com/kitiumai/utils-ts#readme",
+  "homepage": "https://github.com/kitium-ai/utils-ts#readme",
   "publishConfig": {
     "access": "public"
   },
