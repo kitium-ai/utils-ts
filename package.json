@@ -1,6 +1,6 @@
 {
   "name": "@kitiumai/utils-ts",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "description": "Comprehensive TypeScript utilities for KitiumAI projects",
   "license": "MIT",
   "type": "module",
