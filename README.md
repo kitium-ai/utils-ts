@@ -19,21 +19,25 @@ This package serves as the foundational utility layer for all KitiumAI projects,
 In modern TypeScript development, utility functions and types are essential but often scattered across multiple libraries or reimplemented inconsistently. This package addresses several critical needs:
 
 ### 🎯 **Unified Development Experience**
+
 - **Single Source of Truth**: All utility functions and types in one place, ensuring consistency across your entire codebase
 - **Version Consistency**: No more managing multiple utility library versions or dealing with breaking changes
 - **Integrated Ecosystem**: Seamless integration with other KitiumAI packages (`@kitiumai/logger`, `@kitiumai/error`, `@kitiumai/types`)
 
 ### 🏗️ **Type-Safe Development**
+
 - **Advanced Type Utilities**: Beyond basic TypeScript types, get sophisticated type-level programming tools for complex data transformations
 - **Runtime-Type Alignment**: Functions that mirror their type counterparts, ensuring compile-time and runtime consistency
 - **Branded Types**: Create distinct types from primitives (e.g., `UserId` vs `ProductId`) preventing accidental misuse
 
 ### 🚀 **Performance & Bundle Optimization**
+
 - **Tree-Shaking**: Import only what you need with granular subpaths
 - **Zero Dependencies**: Standalone mode for applications that want complete control
 - **Optimized Builds**: ESM-first design with CommonJS compatibility
 
 ### 🧪 **Enterprise-Grade Quality**
+
 - **104 Tests**: Comprehensive test coverage with property-based testing using fast-check
 - **100% JSDoc Coverage**: Every function and type is fully documented
 - **Strict TypeScript**: Built with the strictest TypeScript settings
@@ -41,19 +45,19 @@ In modern TypeScript development, utility functions and types are essential but 
 
 ## Competitor Comparison
 
-| Feature | @kitiumai/utils-ts | Lodash | Ramda | type-fest | utility-types |
-|---------|-------------------|--------|-------|-----------|---------------|
-| **Type Utilities** | 74+ types | ❌ | ❌ | 100+ types | 50+ types |
-| **Runtime Functions** | 133+ functions | 300+ functions | 200+ functions | ❌ | ❌ |
-| **TypeScript First** | ✅ Native | ⚠️ Partial | ⚠️ Partial | ✅ Native | ✅ Native |
-| **Tree-Shakeable** | ✅ Full | ⚠️ Partial | ⚠️ Partial | ✅ Full | ✅ Full |
-| **Zero Dependencies** | ✅ Standalone mode | ❌ | ❌ | ✅ | ✅ |
-| **Functional Programming** | ✅ Data-first/last | ❌ | ✅ Data-last only | ❌ | ❌ |
-| **Advanced Types** | ✅ Branded, Template literals | ❌ | ❌ | ✅ | ✅ |
-| **Error Handling** | ✅ Structured errors | ❌ | ❌ | ❌ | ❌ |
-| **KitiumAI Integration** | ✅ Native | ❌ | ❌ | ❌ | ❌ |
-| **Bundle Size** | 🟢 Small | 🟡 Large | 🟡 Large | 🟢 Small | 🟢 Small |
-| **Performance** | 🟢 Optimized | 🟡 Good | 🟡 Good | 🟢 Excellent | 🟢 Excellent |
+| Feature                    | @kitiumai/utils-ts            | Lodash         | Ramda             | type-fest    | utility-types |
+| -------------------------- | ----------------------------- | -------------- | ----------------- | ------------ | ------------- |
+| **Type Utilities**         | 74+ types                     | ❌             | ❌                | 100+ types   | 50+ types     |
+| **Runtime Functions**      | 133+ functions                | 300+ functions | 200+ functions    | ❌           | ❌            |
+| **TypeScript First**       | ✅ Native                     | ⚠️ Partial     | ⚠️ Partial        | ✅ Native    | ✅ Native     |
+| **Tree-Shakeable**         | ✅ Full                       | ⚠️ Partial     | ⚠️ Partial        | ✅ Full      | ✅ Full       |
+| **Zero Dependencies**      | ✅ Standalone mode            | ❌             | ❌                | ✅           | ✅            |
+| **Functional Programming** | ✅ Data-first/last            | ❌             | ✅ Data-last only | ❌           | ❌            |
+| **Advanced Types**         | ✅ Branded, Template literals | ❌             | ❌                | ✅           | ✅            |
+| **Error Handling**         | ✅ Structured errors          | ❌             | ❌                | ❌           | ❌            |
+| **KitiumAI Integration**   | ✅ Native                     | ❌             | ❌                | ❌           | ❌            |
+| **Bundle Size**            | 🟢 Small                      | 🟡 Large       | 🟡 Large          | 🟢 Small     | 🟢 Small      |
+| **Performance**            | 🟢 Optimized                  | 🟡 Good        | 🟡 Good           | 🟢 Excellent | 🟢 Excellent  |
 
 ### Key Differentiators
 
@@ -66,6 +70,7 @@ In modern TypeScript development, utility functions and types are essential but 
 ## Unique Selling Proposition (USP)
 
 ### 🔄 **Type-Runtime Consistency**
+
 Every runtime function has a corresponding type utility, ensuring compile-time guarantees match runtime behavior.
 
 ```typescript
@@ -80,6 +85,7 @@ const response = camelCase('user_profile_data'); // 'userProfileData'
 ```
 
 ### 🎭 **Flexible API Design**
+
 Choose your preferred calling style - data-first or data-last - both fully type-safe.
 
 ```typescript
@@ -93,14 +99,11 @@ const chunkBy2 = chunk({ size: 2 });
 const chunks = chunkBy2([1, 2, 3, 4]);
 
 // Perfect for function composition
-const processData = pipe(
-  filter(isActive),
-  groupBy('category'),
-  mapValues(sortBy('priority'))
-);
+const processData = pipe(filter(isActive), groupBy('category'), mapValues(sortBy('priority')));
 ```
 
 ### 🛡️ **Structured Error Handling**
+
 Instead of throwing exceptions, functions can return structured results with `onError: 'return'`.
 
 ```typescript
@@ -116,6 +119,7 @@ if (!result.ok) {
 ```
 
 ### 🏷️ **Branded Types for Domain Safety**
+
 Create distinct types from primitives to prevent accidental misuse.
 
 ```typescript
@@ -124,8 +128,12 @@ import type { Brand } from '@kitiumai/utils-ts';
 type UserId = Brand<number, 'UserId'>;
 type ProductId = Brand<number, 'ProductId'>;
 
-function getUser(id: UserId) { /* ... */ }
-function getProduct(id: ProductId) { /* ... */ }
+function getUser(id: UserId) {
+  /* ... */
+}
+function getProduct(id: ProductId) {
+  /* ... */
+}
 
 // ✅ Type-safe - prevents mixing IDs
 const user = getUser(123 as UserId);
@@ -136,6 +144,7 @@ const product = getProduct(456 as ProductId);
 ```
 
 ### 🔗 **KitiumAI Ecosystem Integration**
+
 Native integration with `@kitiumai/error`, `@kitiumai/logger`, and `@kitiumai/types` for consistent error handling, logging, and type definitions across your entire application.
 
 ```bash
@@ -191,6 +200,7 @@ Functional utilities inspired by Lodash and Ramda:
 ### 📝 Type Utilities (74+ types)
 
 #### Array Types
+
 - `ArrayElement<T>` - Extract element type from array
 - `ArrayLength<T>` - Get array length as type
 - `Head<T>`, `Tail<T>`, `Last<T>`, `Initial<T>` - Array boundary types
@@ -198,11 +208,13 @@ Functional utilities inspired by Lodash and Ramda:
 - `Slice<T>` - Array slicing type
 
 #### Branded Types
+
 - `Brand<T, B>` - Create branded type from base type
 - `Opaque<T, B>` - Create opaque type alias
 - `Unbrand<T>` - Remove brand/opaque wrapper
 
 #### Conditional Types
+
 - `If<Condition, Then, Else>` - TypeScript's if-then-else
 - `IsEqual<A, B>`, `IsAny<T>`, `IsNever<T>`, `IsUnknown<T>` - Type equality checks
 - `IsArray<T>`, `IsTuple<T>`, `IsFunction<T>`, `IsPrimitive<T>`, `IsObject<T>` - Type guards
@@ -210,12 +222,14 @@ Functional utilities inspired by Lodash and Ramda:
 - `IsUnion<T>`, `OptionalKeys<T>`, `RequiredKeys<T>` - Union and key utilities
 
 #### Template Literal Types
+
 - `CamelCase<S>`, `PascalCase<S>`, `KebabCase<S>`, `SnakeCase<S>` - Case conversions
 - `Split<S, D>`, `Join<T, D>`, `Trim<S>` - String manipulation
 - `Replace<S, From, To>`, `ReplaceAll<S, From, To>` - String replacement
 - `StringLength<S>`, `StartsWith<S, Prefix>`, `EndsWith<S, Suffix>`, `Includes<S, Sub>` - String queries
 
 #### Utility Types
+
 - `DeepPartial<T>`, `DeepReadonly<T>`, `DeepRequired<T>` - Recursive utilities
 - `Mutable<T>`, `Writable<T>`, `WritableDeep<T>` - Mutability control
 - `Merge<A, B>`, `MergeDeep<A, B>` - Type merging
@@ -226,12 +240,14 @@ Functional utilities inspired by Lodash and Ramda:
 - `LiteralUnion<T, U>`, `DiffKeys<A, B>`, `Intersection<A, B>` - Complex type operations
 
 #### Result Types
+
 - `Result<T>` - Standard result type: `{ ok: true, value: T } | { ok: false, error: Error }`
 - `AsyncResult<T>` - Promise-wrapped result type
 
 ### ⚙️ Runtime Functions (133+ functions)
 
 #### Array Functions (27 functions)
+
 - **Chunking**: `chunk(items, options)`, `chunk(options)(items)`
 - **Grouping**: `groupBy(items, selector)`, `countBy(items, selector)`, `keyBy(items, keyFn)`
 - **Set Operations**: `union(arrays)`, `intersection(arrays)`, `difference(arrays)`, `without(array, values)`
@@ -242,6 +258,7 @@ Functional utilities inspired by Lodash and Ramda:
 - **Query**: `arraysEqual(a, b)`, `zip(arrays)`, `unzip(zipped)`
 
 #### Object Functions (20 functions)
+
 - **Deep Operations**: `deepMerge(objects)`, `deepClone(value)`, `isEqual(a, b)`
 - **Property Access**: `get(obj, path)`, `set(obj, path, value)`, `has(obj, path)`
 - **Selection**: `pick(obj, keys)`, `omit(obj, keys)`
@@ -250,6 +267,7 @@ Functional utilities inspired by Lodash and Ramda:
 - **Queries**: `isPlainObject(value)`, `size(obj)`
 
 #### String Functions (20 functions)
+
 - **Case Conversion**: `camelCase(str)`, `pascalCase(str)`, `kebabCase(str)`, `snakeCase(str)`, `capitalize(str)`, `titleCase(str)`
 - **Transformation**: `reverse(str)`, `truncate(str, options)`, `pad(str, options)`, `padEnd(str, options)`, `padStart(str, options)`
 - **Manipulation**: `removePrefix(str, prefix)`, `removeSuffix(str, suffix)`
@@ -258,6 +276,7 @@ Functional utilities inspired by Lodash and Ramda:
 - **Utils**: `randomString(length)`
 
 #### Function Functions (13 functions)
+
 - **Composition**: `compose(...fns)`, `pipe(...fns)`
 - **Control Flow**: `debounce(fn, delay)`, `throttle(fn, interval)`, `delay(fn, ms)`
 - **Memoization**: `memoize(fn, resolver)`, `once(fn)`
@@ -265,6 +284,7 @@ Functional utilities inspired by Lodash and Ramda:
 - **Execution**: `attempt(fn)`, `constant(value)`, `identity(value)`, `noop()`
 
 #### Async Functions (11 functions)
+
 - **Timing**: `sleep(ms)`, `timeout(promise, ms, message)`
 - **Retry**: `retry(fn, options)`
 - **Concurrency**: `parallel(fns)`, `series(fns)`, `concurrency(items, fn, limit)`
@@ -272,17 +292,20 @@ Functional utilities inspired by Lodash and Ramda:
 - **Deferred**: `deferred<T>()` - Returns `{ promise, resolve, reject }`
 
 #### Validation Functions (13 functions)
+
 - **Type Guards**: `isString(v)`, `isNumber(v)`, `isBoolean(v)`, `isArray(v)`, `isObject(v)`, `isFunction(v)`
 - **Advanced Guards**: `isDate(v)`, `isRegExp(v)`, `isError(v)`
 - **Value Checks**: `isNil(v)`, `isEmpty(v)`, `isFinite(v)`, `isInteger(v)`
 
 #### Number Functions (10 functions)
+
 - **Math**: `clamp(value, min, max)`, `sum(numbers)`, `mean(numbers)`, `min(numbers)`, `max(numbers)`
 - **Random**: `random(min, max)`, `randomInt(min, max)`
 - **Queries**: `inRange(value, start, end)`
 - **Extrema**: `minBy(array, fn)`, `maxBy(array, fn)`
 
 #### Date Functions (19 functions)
+
 - **Formatting**: `formatDate(date, format, locale)`, `parseDate(dateString)`
 - **Arithmetic**: `addDays(date, days)`, `addMonths(date, months)`, `addYears(date, years)`
 - **Boundaries**: `startOfDay(date)`, `endOfDay(date)`, `startOfMonth(date)`, `endOfMonth(date)`, `startOfYear(date)`, `endOfYear(date)`
@@ -292,10 +315,12 @@ Functional utilities inspired by Lodash and Ramda:
 ### 🔧 Configuration & Integration
 
 #### Configuration Functions
+
 - `setUtilsConfig(config)` - Configure package behavior
 - `setErrorFactory(factory)` - Wire custom error factory for `@kitiumai/error` integration
 
 #### Integration Types
+
 - Integration types for `@kitiumai/logger`, `@kitiumai/error`, and `@kitiumai/types`
 
 ## Usage Examples
@@ -303,6 +328,7 @@ Functional utilities inspired by Lodash and Ramda:
 ### 🔧 Advanced Type Patterns
 
 #### Domain Modeling with Branded Types
+
 ```typescript
 import type { Brand, DeepPartial } from '@kitiumai/utils-ts';
 
@@ -328,8 +354,12 @@ interface User {
 type UserUpdate = DeepPartial<Omit<User, 'id'>>;
 
 // Type-safe functions
-function getUser(id: UserId): Promise<User> { /* ... */ }
-function updateUser(id: UserId, updates: UserUpdate): Promise<User> { /* ... */ }
+function getUser(id: UserId): Promise<User> {
+  /* ... */
+}
+function updateUser(id: UserId, updates: UserUpdate): Promise<User> {
+  /* ... */
+}
 
 // ✅ Compile-time safety prevents mixing IDs
 const user = await getUser(123 as UserId);
@@ -338,6 +368,7 @@ const user = await getUser(123 as UserId);
 ```
 
 #### API Response Types with Result Pattern
+
 ```typescript
 import type { Result, CamelCase, Merge } from '@kitiumai/utils-ts';
 
@@ -369,6 +400,7 @@ interface ApiClient {
 ### 🎯 Real-World Runtime Examples
 
 #### Data Processing Pipeline
+
 ```typescript
 import { pipe, filter, groupBy, mapValues, sortBy } from '@kitiumai/utils-ts';
 
@@ -405,6 +437,7 @@ const customerTotals = processOrders(orders);
 ```
 
 #### Error Handling with Structured Results
+
 ```typescript
 import { chunk, retry, timeout, Result } from '@kitiumai/utils-ts';
 
@@ -423,11 +456,7 @@ async function processBatch<T, R>(
 
   for (const batch of batches.value) {
     const result = await retry(
-      () => timeout(
-        Promise.all(batch.map(processor)),
-        5000,
-        'Batch processing timeout'
-      ),
+      () => timeout(Promise.all(batch.map(processor)), 5000, 'Batch processing timeout'),
       { retries: options.retries, delay: 1000 }
     );
 
@@ -443,7 +472,9 @@ async function processBatch<T, R>(
 
 // Usage with proper error handling
 const batchResults = await processBatch(
-  [/* large array of items */],
+  [
+    /* large array of items */
+  ],
   async (item) => processItem(item),
   { batchSize: 10, retries: 3 }
 );
@@ -453,6 +484,7 @@ const failed = batchResults.filter((r): r is Result<any> & { ok: false } => !r.o
 ```
 
 #### Advanced Object Manipulation
+
 ```typescript
 import { deepMerge, pick, omit, get, set, isEqual } from '@kitiumai/utils-ts';
 
@@ -504,6 +536,7 @@ const hasChanged = !isEqual(defaultConfig.features, finalConfig.features);
 ```
 
 #### String Processing & Validation
+
 ```typescript
 import { camelCase, kebabCase, isEmail, truncate, randomString } from '@kitiumai/utils-ts';
 
@@ -519,18 +552,19 @@ function validateEmail(input: string): Result<Brand<string, 'Email'>> {
   if (!isEmail(trimmed)) {
     return {
       ok: false,
-      error: new Error('Invalid email format')
+      error: new Error('Invalid email format'),
     };
   }
 
   return {
     ok: true,
-    value: trimmed as Brand<string, 'Email'>
+    value: trimmed as Brand<string, 'Email'>,
   };
 }
 
 // Content formatting
-const description = "This is a very long description that needs to be truncated for display purposes.";
+const description =
+  'This is a very long description that needs to be truncated for display purposes.';
 const truncated = truncate(description, { length: 50, separator: ' ' });
 // Result: "This is a very long description that needs to be..."
 
@@ -540,8 +574,16 @@ const csrfToken = randomString(16);
 ```
 
 #### Date & Time Utilities
+
 ```typescript
-import { formatDate, addDays, differenceInDays, isBefore, startOfMonth, endOfMonth } from '@kitiumai/utils-ts';
+import {
+  formatDate,
+  addDays,
+  differenceInDays,
+  isBefore,
+  startOfMonth,
+  endOfMonth,
+} from '@kitiumai/utils-ts';
 
 // Subscription management
 class SubscriptionManager {
