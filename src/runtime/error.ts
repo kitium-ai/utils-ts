@@ -1,23 +1,28 @@
 import type { ErrorStrategy } from './result.js';
 
 /**
- * Utility-specific error codes
+ * Utility-specific error codes with granular categorization
  */
 export type UtilsErrorCode =
   | 'INVALID_CHUNK_SIZE'
+  | 'INVALID_ARRAY_SIZE'
   | 'GROUP_BY_KEY_MISSING'
+  | 'GROUP_BY_SELECTOR_MISSING'
   | 'INVALID_ARGUMENT'
-  | 'OPERATION_FAILED';
+  | 'INVALID_RANGE'
+  | 'OPERATION_FAILED'
+  | 'TYPE_ERROR'
+  | 'VALIDATION_ERROR';
 
 /**
  * Error initialization options for utility errors
  */
-export interface UtilsErrorInit {
+export type UtilsErrorInit = {
   code: UtilsErrorCode;
   message: string;
   details?: Record<string, unknown>;
   cause?: unknown;
-}
+};
 
 /**
  * Base error class for utils-ts package
@@ -25,13 +30,14 @@ export interface UtilsErrorInit {
 export class UtilsError extends Error {
   readonly code: UtilsErrorCode;
   readonly details: Record<string, unknown> | undefined;
+  readonly cause?: unknown;
 
   constructor(init: UtilsErrorInit) {
     super(init.message);
     this.name = 'UtilsError';
     this.code = init.code;
     this.details = init.details;
-    if (init.cause) {
+    if (init.cause !== undefined) {
       this.cause = init.cause;
     }
   }
@@ -45,7 +51,7 @@ export class UtilsError extends Error {
       code: this.code,
       message: this.message,
       ...(this.details ? { details: this.details } : {}),
-      ...(this.cause ? { cause: this.cause } : {}),
+      ...(this.cause !== undefined ? { cause: this.cause } : {}),
     };
   }
 }
@@ -60,9 +66,9 @@ export const createUtilsError = (init: UtilsErrorInit): UtilsError => {
 /**
  * Error handling options for utilities
  */
-export interface ErrorHandlingOptions {
+export type ErrorHandlingOptions = {
   onError?: ErrorStrategy;
-}
+};
 
 /**
  * Check if an error is a UtilsError

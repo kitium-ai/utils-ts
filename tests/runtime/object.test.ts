@@ -8,7 +8,7 @@ import {
   fromPairs,
   toPairs,
   size,
-} from '../../src/runtime/object.js';
+} from '../../src/runtime/object/index.js';
 
 describe('object', () => {
   describe('defaults', () => {

@@ -29,7 +29,7 @@ import {
   flatMap,
   countBy,
   keyBy,
-} from '../../src/runtime/array.js';
+} from '../../src/runtime/array/index.js';
 
 describe('array', () => {
   describe('chunk', () => {

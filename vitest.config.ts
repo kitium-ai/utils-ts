@@ -1,42 +1,22 @@
-/**
- * Vitest Configuration for @kitiumai/utils-ts
- * Using latest @kitiumai/vitest-helpers 2.0 APIs
- */
+import baseConfig from '@kitiumai/config/vitest.config.base.js';
 import { defineConfig } from 'vitest/config';
-import { createKitiumVitestConfig } from '@kitiumai/vitest-helpers/config';
 
-export default defineConfig(
-  createKitiumVitestConfig({
-    preset: 'library',
-    projectName: '@kitiumai/utils-ts',
-    environment: 'node',
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html', 'lcov'],
-      include: ['src/**/*.ts'],
-      exclude: [
-        '**/*.test.ts',
-        '**/*.spec.ts',
-        '**/*.test-d.ts',
-        '**/*.bench.ts',
-        '**/index.ts', // Re-export files
-      ],
-      thresholds: {
-        lines: 90,
-        functions: 90,
-        branches: 85,
-        statements: 90,
-      },
-    },
-    overrides: {
-      test: {
-        // Include test files
-        include: ['tests/**/*.test.ts', 'tests/**/*.spec.ts'],
-        // Benchmark configuration
-        benchmark: {
-          include: ['benchmarks/**/*.bench.ts'],
-        },
-      },
-    },
-  })
-);
+// Try to use vitest-helpers presets if available
+let vitestHelpersPreset: Record<string, unknown> | null = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const vitestHelpers = require('@kitiumai/vitest-helpers');
+  if (vitestHelpers.setupPresets?.libraryPreset) {
+    vitestHelpersPreset = vitestHelpers.setupPresets.libraryPreset;
+  }
+} catch {
+  // Fallback if vitest-helpers is not available
+  vitestHelpersPreset = null;
+}
+
+export default defineConfig({
+  ...baseConfig,
+  // Use library preset from @kitiumai/vitest-helpers for library packages if available
+  ...(vitestHelpersPreset || {}),
+  // Add your custom config here
+});

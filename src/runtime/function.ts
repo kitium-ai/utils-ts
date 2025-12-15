@@ -2,26 +2,33 @@
  * Function utility functions
  */
 
+type UnknownFunction = (...args: unknown[]) => unknown;
+type BooleanFunction = (...args: unknown[]) => boolean;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyFunction = (...args: any[]) => any;
+
 /**
  * Compose functions from right to left
  */
-export function compose<T, R>(...fns: Array<(arg: unknown) => unknown>): (arg: T) => R {
-  return (arg: T) => fns.reduceRight((result, fn) => fn(result), arg as unknown) as R;
+export function compose<T, R>(...fns: Array<(argument: unknown) => unknown>): (argument: T) => R {
+  return (argument: T) =>
+    fns.reduceRight((result, function_) => function_(result), argument as unknown) as R;
 }
 
 /**
  * Pipe functions from left to right
  */
-export function pipe<T, R>(...fns: Array<(arg: unknown) => unknown>): (arg: T) => R {
-  return (arg: T) => fns.reduce((result, fn) => fn(result), arg as unknown) as R;
+export function pipe<T, R>(...fns: Array<(argument: unknown) => unknown>): (argument: T) => R {
+  return (argument: T) =>
+    fns.reduce((result, function_) => function_(result), argument as unknown) as R;
 }
 
 /**
  * Debounce function execution
  */
-export function debounce<T extends (...args: unknown[]) => unknown>(
-  fn: T,
-  delay: number
+export function debounce<T extends UnknownFunction>(
+  function_: T,
+  delayMs: number
 ): (...args: Parameters<T>) => void {
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
@@ -31,17 +38,17 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
     }
 
     timeoutId = setTimeout(() => {
-      fn.apply(this, args);
+      function_.apply(this, args);
       timeoutId = null;
-    }, delay);
+    }, delayMs);
   };
 }
 
 /**
  * Throttle function execution
  */
-export function throttle<T extends (...args: unknown[]) => unknown>(
-  fn: T,
+export function throttle<T extends UnknownFunction>(
+  function_: T,
   interval: number
 ): (...args: Parameters<T>) => void {
   let lastCall = 0;
@@ -53,7 +60,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 
     if (timeSinceLastCall >= interval) {
       lastCall = now;
-      fn.apply(this, args);
+      function_.apply(this, args);
     } else {
       if (timeoutId) {
         clearTimeout(timeoutId);
@@ -61,7 +68,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 
       timeoutId = setTimeout(() => {
         lastCall = Date.now();
-        fn.apply(this, args);
+        function_.apply(this, args);
         timeoutId = null;
       }, interval - timeSinceLastCall);
     }
@@ -71,8 +78,8 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 /**
  * Memoize function results
  */
-export function memoize<T extends (...args: unknown[]) => unknown>(
-  fn: T,
+export function memoize<T extends UnknownFunction>(
+  function_: T,
   resolver?: (...args: Parameters<T>) => string
 ): T {
   const cache = new Map<string, ReturnType<T>>();
@@ -84,7 +91,7 @@ export function memoize<T extends (...args: unknown[]) => unknown>(
       return cache.get(key)!;
     }
 
-    const result = fn.apply(this, args) as ReturnType<T>;
+    const result = function_.apply(this, args) as ReturnType<T>;
     cache.set(key, result);
     return result;
   } as T;
@@ -93,14 +100,14 @@ export function memoize<T extends (...args: unknown[]) => unknown>(
 /**
  * Execute function only once
  */
-export function once<T extends (...args: unknown[]) => unknown>(fn: T): T {
-  let called = false;
+export function once<T extends UnknownFunction>(function_: T): T {
+  let hasCalled = false;
   let result: ReturnType<T>;
 
   return function (this: unknown, ...args: Parameters<T>): ReturnType<T> {
-    if (!called) {
-      called = true;
-      result = fn.apply(this, args) as ReturnType<T>;
+    if (!hasCalled) {
+      hasCalled = true;
+      result = function_.apply(this, args) as ReturnType<T>;
     }
     return result;
   } as T;
@@ -111,28 +118,28 @@ export function once<T extends (...args: unknown[]) => unknown>(fn: T): T {
  * Note: Simple implementation for common use cases
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function curry<T extends (...args: any[]) => any>(fn: T, arity = fn.length): any {
+export function curry<T extends AnyFunction>(function_: T, arity = function_.length): any {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return function curried(this: unknown, ...args: any[]): any {
     if (args.length >= arity) {
-      return fn.apply(this, args);
+      return function_.apply(this, args);
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (...nextArgs: any[]) => curried.apply(this, [...args, ...nextArgs]);
+    return (...nextArguments: any[]) => curried.apply(this, [...args, ...nextArguments]);
   };
 }
 
 /**
  * Delay function execution
  */
-export function delay<T extends (...args: unknown[]) => unknown>(
-  fn: T,
+export function delay<T extends UnknownFunction>(
+  function_: T,
   ms: number
 ): (...args: Parameters<T>) => Promise<ReturnType<T>> {
   return (...args: Parameters<T>) => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(fn(...args) as ReturnType<T>);
+        resolve(function_(...args) as ReturnType<T>);
       }, ms);
     });
   };
@@ -141,20 +148,20 @@ export function delay<T extends (...args: unknown[]) => unknown>(
 /**
  * Negate function result
  */
-export function negate<T extends (...args: unknown[]) => boolean>(
-  fn: T
+export function negate<T extends BooleanFunction>(
+  function_: T
 ): (...args: Parameters<T>) => boolean {
-  return (...args: Parameters<T>) => !fn(...args);
+  return (...args: Parameters<T>) => !function_(...args);
 }
 
 /**
  * Call function with try-catch and return result or error
  */
 export function attempt<T>(
-  fn: () => T
+  function_: () => T
 ): { success: true; value: T } | { success: false; error: Error } {
   try {
-    return { success: true, value: fn() };
+    return { success: true, value: function_() };
   } catch (error) {
     return { success: false, error: error as Error };
   }

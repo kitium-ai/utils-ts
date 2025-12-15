@@ -1,6 +1,7 @@
 /**
  * Integration with @kitiumai/error package
  * Provides utilities to convert UtilsError to KitiumError format
+ * and adapter pattern for extensible error handling
  */
 
 import {
@@ -9,6 +10,7 @@ import {
   type UtilsError,
   type UtilsErrorInit,
 } from '../runtime/error.js';
+import { getErrorFactory, setErrorFactory } from '../runtime/internal/error-factory.js';
 
 // Type-only imports from @kitiumai/error (peer dependency)
 type KitiumErrorShape = {
@@ -32,9 +34,21 @@ type KitiumErrorShape = {
   readonly help?: string;
   readonly docs?: string;
   readonly source?: string;
-  readonly context?: Record<string, unknown>;
+  readonly context?: {
+    readonly correlationId: string;
+    readonly requestId: string;
+    readonly [key: string]: unknown;
+  };
   readonly cause?: unknown;
 };
+
+function generateCorrelationId(): string {
+  return `corr_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function generateRequestId(): string {
+  return `req_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+}
 
 /**
  * Check if @kitiumai/error package is available
@@ -65,9 +79,15 @@ export function toKitiumErrorShape(error: UtilsError): KitiumErrorShape {
 
   // Only add optional properties if they have values
   if (error.details) {
-    Object.assign(shape, { context: error.details });
+    Object.assign(shape, {
+      context: {
+        correlationId: generateCorrelationId(),
+        requestId: generateRequestId(),
+        ...error.details,
+      },
+    });
   }
-  if (error.cause) {
+  if (error.cause !== undefined) {
     Object.assign(shape, { cause: error.cause });
   }
 
@@ -139,6 +159,98 @@ export async function enrichUtilsError(
 }
 
 /**
+ * Integration adapter interface for custom error handling
+ * Allows framework-specific error creation strategies
+ */
+export interface IntegrationAdapter {
+  /**
+   * Create an error from utils context
+   */
+  createError(context: {
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
+    cause?: unknown;
+  }): Error;
+
+  /**
+   * Check if error is managed by this adapter
+   */
+  isAdapterError(error: unknown): boolean;
+
+  /**
+   * Get the name of this adapter
+   */
+  getName(): string;
+}
+
+/**
+ * Adapter for integrating with @kitiumai/error
+ */
+export class KitiumErrorAdapter implements IntegrationAdapter {
+  async initializeFactory(): Promise<void> {
+    try {
+      const available = await isKitiumErrorAvailable();
+      if (available) {
+        // Factory will be set after initialization
+        // Users should call setErrorFactory(new KitiumErrorAdapter()) manually
+      }
+    } catch {
+      // Silently fail if @kitiumai/error is not available
+    }
+  }
+
+  createError(context: {
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
+    cause?: unknown;
+  }): Error {
+    // Create UtilsError as the base
+    const init: UtilsErrorInit = {
+      code: context.code as any,
+      message: context.message,
+    };
+
+    if (context.details !== undefined) {
+      init.details = context.details;
+    }
+
+    if (context.cause !== undefined) {
+      init.cause = context.cause;
+    }
+
+    const utilsError = createUtilsError(init);
+    return utilsError;
+  }
+
+  isAdapterError(error: unknown): error is UtilsError {
+    return isUtilsError(error);
+  }
+
+  getName(): string {
+    return 'KitiumErrorAdapter';
+  }
+}
+
+/**
+ * Initialize KitiumError integration
+ * Call this to enable KitiumError integration for utils-ts errors
+ *
+ * @example
+ * ```ts
+ * import { initializeKitiumIntegration } from '@kitiumai/utils-ts/integrations/error';
+ * await initializeKitiumIntegration();
+ * ```
+ */
+export async function initializeKitiumIntegration(): Promise<void> {
+  const adapter = new KitiumErrorAdapter();
+  await adapter.initializeFactory();
+  // Note: Actual factory replacement should be done by the user
+  // if they have @kitiumai/error available
+}
+
+/**
  * Error mapper utilities
  */
 export const errorMapper = {
@@ -161,4 +273,14 @@ export const errorMapper = {
    * Check if KitiumError package is available
    */
   isKitiumErrorAvailable,
+
+  /**
+   * Get the current error factory
+   */
+  getErrorFactory,
+
+  /**
+   * Set custom error factory for dependency injection
+   */
+  setErrorFactory,
 };

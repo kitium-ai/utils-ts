@@ -17,8 +17,8 @@
  * clamp(5, 0, 10) // 5
  * ```
  */
-export function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max);
+export function clamp(value: number, minValue: number, maxValue: number): number {
+  return Math.min(Math.max(value, minValue), maxValue);
 }
 
 /**
@@ -33,8 +33,8 @@ export function clamp(value: number, min: number, max: number): number {
  * random(0, 10) // A number between 0 and 10
  * ```
  */
-export function random(min: number, max: number): number {
-  return Math.random() * (max - min) + min;
+export function random(minValue: number, maxValue: number): number {
+  return Math.random() * (maxValue - minValue) + minValue;
 }
 
 /**
@@ -49,8 +49,8 @@ export function random(min: number, max: number): number {
  * randomInt(0, 10) // An integer between 0 and 10
  * ```
  */
-export function randomInt(min: number, max: number): number {
-  return Math.floor(random(min, max + 1));
+export function randomInt(minValue: number, maxValue: number): number {
+  return Math.floor(random(minValue, maxValue + 1));
 }
 
 /**
@@ -87,7 +87,7 @@ export function inRange(value: number, start: number, end?: number): boolean {
  * ```
  */
 export function sum(numbers: number[]): number {
-  return numbers.reduce((acc, n) => acc + n, 0);
+  return numbers.reduce((accumulator, n) => accumulator + n, 0);
 }
 
 /**
@@ -160,17 +160,17 @@ export function max(numbers: number[]): number | undefined {
  * minBy([{ age: 20 }, { age: 30 }], x => x.age) // { age: 20 }
  * ```
  */
-export function minBy<T>(array: T[], fn: (item: T) => number): T | undefined {
+export function minBy<T>(array: T[], function_: (item: T) => number): T | undefined {
   if (array.length === 0) {
     return undefined;
   }
-  let minValue = fn(array[0]!);
+  let minValue = function_(array[0]!);
   let minItem = array[0]!;
-  for (let i = 1; i < array.length; i++) {
-    const value = fn(array[i]!);
+  for (let index = 1; index < array.length; index++) {
+    const value = function_(array[index]!);
     if (value < minValue) {
       minValue = value;
-      minItem = array[i]!;
+      minItem = array[index]!;
     }
   }
   return minItem;
@@ -189,17 +189,17 @@ export function minBy<T>(array: T[], fn: (item: T) => number): T | undefined {
  * maxBy([{ age: 20 }, { age: 30 }], x => x.age) // { age: 30 }
  * ```
  */
-export function maxBy<T>(array: T[], fn: (item: T) => number): T | undefined {
+export function maxBy<T>(array: T[], function_: (item: T) => number): T | undefined {
   if (array.length === 0) {
     return undefined;
   }
-  let maxValue = fn(array[0]!);
+  let maxValue = function_(array[0]!);
   let maxItem = array[0]!;
-  for (let i = 1; i < array.length; i++) {
-    const value = fn(array[i]!);
+  for (let index = 1; index < array.length; index++) {
+    const value = function_(array[index]!);
     if (value > maxValue) {
       maxValue = value;
-      maxItem = array[i]!;
+      maxItem = array[index]!;
     }
   }
   return maxItem;

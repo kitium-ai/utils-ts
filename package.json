@@ -54,14 +54,64 @@
       "require": "./dist/runtime/index.cjs"
     },
     "./runtime/array": {
-      "types": "./dist/runtime/array.d.ts",
-      "import": "./dist/runtime/array.js",
-      "require": "./dist/runtime/array.cjs"
+      "types": "./dist/runtime/array/index.d.ts",
+      "import": "./dist/runtime/array/index.js",
+      "require": "./dist/runtime/array/index.cjs"
+    },
+    "./runtime/array/chunk": {
+      "types": "./dist/runtime/array/chunk.d.ts",
+      "import": "./dist/runtime/array/chunk.js",
+      "require": "./dist/runtime/array/chunk.cjs"
+    },
+    "./runtime/array/group": {
+      "types": "./dist/runtime/array/group.d.ts",
+      "import": "./dist/runtime/array/group.js",
+      "require": "./dist/runtime/array/group.cjs"
+    },
+    "./runtime/array/set-ops": {
+      "types": "./dist/runtime/array/set-ops.d.ts",
+      "import": "./dist/runtime/array/set-ops.js",
+      "require": "./dist/runtime/array/set-ops.cjs"
+    },
+    "./runtime/array/transform": {
+      "types": "./dist/runtime/array/transform.d.ts",
+      "import": "./dist/runtime/array/transform.js",
+      "require": "./dist/runtime/array/transform.cjs"
+    },
+    "./runtime/array/query": {
+      "types": "./dist/runtime/array/query.d.ts",
+      "import": "./dist/runtime/array/query.js",
+      "require": "./dist/runtime/array/query.cjs"
+    },
+    "./runtime/array/utils": {
+      "types": "./dist/runtime/array/utils.d.ts",
+      "import": "./dist/runtime/array/utils.js",
+      "require": "./dist/runtime/array/utils.cjs"
     },
     "./runtime/object": {
-      "types": "./dist/runtime/object.d.ts",
-      "import": "./dist/runtime/object.js",
-      "require": "./dist/runtime/object.cjs"
+      "types": "./dist/runtime/object/index.d.ts",
+      "import": "./dist/runtime/object/index.js",
+      "require": "./dist/runtime/object/index.cjs"
+    },
+    "./runtime/object/deep": {
+      "types": "./dist/runtime/object/deep.d.ts",
+      "import": "./dist/runtime/object/deep.js",
+      "require": "./dist/runtime/object/deep.cjs"
+    },
+    "./runtime/object/transform": {
+      "types": "./dist/runtime/object/transform.d.ts",
+      "import": "./dist/runtime/object/transform.js",
+      "require": "./dist/runtime/object/transform.cjs"
+    },
+    "./runtime/object/query": {
+      "types": "./dist/runtime/object/query.d.ts",
+      "import": "./dist/runtime/object/query.js",
+      "require": "./dist/runtime/object/query.cjs"
+    },
+    "./runtime/object/utils": {
+      "types": "./dist/runtime/object/utils.d.ts",
+      "import": "./dist/runtime/object/utils.js",
+      "require": "./dist/runtime/object/utils.cjs"
     },
     "./runtime/function": {
       "types": "./dist/runtime/function.d.ts",
@@ -69,9 +119,34 @@
       "require": "./dist/runtime/function.cjs"
     },
     "./runtime/string": {
-      "types": "./dist/runtime/string.d.ts",
-      "import": "./dist/runtime/string.js",
-      "require": "./dist/runtime/string.cjs"
+      "types": "./dist/runtime/string/index.d.ts",
+      "import": "./dist/runtime/string/index.js",
+      "require": "./dist/runtime/string/index.cjs"
+    },
+    "./runtime/string/case": {
+      "types": "./dist/runtime/string/case.d.ts",
+      "import": "./dist/runtime/string/case.js",
+      "require": "./dist/runtime/string/case.cjs"
+    },
+    "./runtime/string/transform": {
+      "types": "./dist/runtime/string/transform.d.ts",
+      "import": "./dist/runtime/string/transform.js",
+      "require": "./dist/runtime/string/transform.cjs"
+    },
+    "./runtime/string/query": {
+      "types": "./dist/runtime/string/query.d.ts",
+      "import": "./dist/runtime/string/query.js",
+      "require": "./dist/runtime/string/query.cjs"
+    },
+    "./runtime/string/escape": {
+      "types": "./dist/runtime/string/escape.d.ts",
+      "import": "./dist/runtime/string/escape.js",
+      "require": "./dist/runtime/string/escape.cjs"
+    },
+    "./runtime/string/utils": {
+      "types": "./dist/runtime/string/utils.d.ts",
+      "import": "./dist/runtime/string/utils.js",
+      "require": "./dist/runtime/string/utils.cjs"
     },
     "./runtime/async": {
       "types": "./dist/runtime/async.d.ts",
@@ -269,24 +344,25 @@
     "access": "public"
   },
   "devDependencies": {
-    "@kitiumai/config": "^2.0.1",
-    "@kitiumai/lint": "^2.0.1",
-    "@kitiumai/scripts": "^1.0.0",
-    "@kitiumai/vitest-helpers": "^2.0.1",
+    "@kitiumai/config": "^3.1.4",
+    "@kitiumai/lint": "^3.0.0",
+    "@kitiumai/scripts": "^2.0.0",
+    "@kitiumai/vitest-helpers": "^3.0.0",
     "@types/node": "^24.10.1",
-    "@vitest/ui": "^2.0.0",
+    "@vitest/ui": "^2.1.3",
     "eslint": "^9.15.0",
+    "husky": "^9.1.7",
     "prettier": "^3.6.2",
     "tsd": "^0.31.0",
     "typescript": "^5.6.0",
-    "vitest": "^2.0.0"
+    "vitest": "^2.1.8"
   },
   "dependencies": {
-    "@kitiumai/types": "^2.0.1",
-    "@kitiumai/logger": "^2.0.1"
+    "@kitiumai/logger": "^3.0.1",
+    "@kitiumai/types": "^3.0.0"
   },
   "peerDependencies": {
-    "@kitiumai/error": "^2.0.1"
+    "@kitiumai/error": "^3.0.0"
   },
   "peerDependenciesMeta": {
     "@kitiumai/error": {

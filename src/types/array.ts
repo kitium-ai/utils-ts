@@ -13,7 +13,7 @@
  * type Element = ArrayElement<number[]>; // number
  * ```
  */
-export type ArrayElement<T> = T extends readonly (infer U)[] ? U : never;
+export type ArrayElement<T> = T extends ReadonlyArray<infer U> ? U : never;
 
 /**
  * Get the length of an array type
