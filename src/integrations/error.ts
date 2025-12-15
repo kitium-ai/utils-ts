@@ -4,6 +4,7 @@
  * and adapter pattern for extensible error handling
  */
 
+import { isIntegrationsEnabled } from '../config.js';
 import {
   createUtilsError,
   isUtilsError,
@@ -54,6 +55,10 @@ function generateRequestId(): string {
  * Check if @kitiumai/error package is available
  */
 export async function isKitiumErrorAvailable(): Promise<boolean> {
+  if (!isIntegrationsEnabled()) {
+    return false;
+  }
+
   try {
     // Try to dynamically import the package
     await import('@kitiumai/error');
@@ -98,6 +103,10 @@ export function toKitiumErrorShape(error: UtilsError): KitiumErrorShape {
  * Create a KitiumError from UtilsError (requires @kitiumai/error as peer dependency)
  */
 export async function toKitiumError(error: UtilsError): Promise<Error> {
+  if (!isIntegrationsEnabled()) {
+    return error;
+  }
+
   try {
     // Dynamically import @kitiumai/error
     const errorModule = await import('@kitiumai/error');
@@ -118,7 +127,7 @@ export async function createUtilsErrorWithKitium(
 ): Promise<Error> {
   const utilsError = createUtilsError(init);
 
-  if (convertToKitium) {
+  if (convertToKitium && isIntegrationsEnabled()) {
     try {
       return await toKitiumError(utilsError);
     } catch {
@@ -136,6 +145,10 @@ export async function enrichUtilsError(
   error: UtilsError,
   context: Record<string, unknown>
 ): Promise<Error> {
+  if (!isIntegrationsEnabled()) {
+    return error;
+  }
+
   try {
     // Try to use enrichError from @kitiumai/error
     const errorModule = await import('@kitiumai/error');
@@ -162,7 +175,7 @@ export async function enrichUtilsError(
  * Integration adapter interface for custom error handling
  * Allows framework-specific error creation strategies
  */
-export interface IntegrationAdapter {
+export type IntegrationAdapter = {
   /**
    * Create an error from utils context
    */
@@ -182,7 +195,7 @@ export interface IntegrationAdapter {
    * Get the name of this adapter
    */
   getName(): string;
-}
+};
 
 /**
  * Adapter for integrating with @kitiumai/error
@@ -190,8 +203,8 @@ export interface IntegrationAdapter {
 export class KitiumErrorAdapter implements IntegrationAdapter {
   async initializeFactory(): Promise<void> {
     try {
-      const available = await isKitiumErrorAvailable();
-      if (available) {
+      const isAvailable = await isKitiumErrorAvailable();
+      if (isAvailable) {
         // Factory will be set after initialization
         // Users should call setErrorFactory(new KitiumErrorAdapter()) manually
       }
@@ -207,7 +220,9 @@ export class KitiumErrorAdapter implements IntegrationAdapter {
     cause?: unknown;
   }): Error {
     // Create UtilsError as the base
+    // We need to cast context.code (string) to UtilsErrorCode
     const init: UtilsErrorInit = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       code: context.code as any,
       message: context.message,
     };

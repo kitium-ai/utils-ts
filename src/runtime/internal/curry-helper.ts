@@ -6,18 +6,13 @@
 /**
  * Data-first overload: function(data, options) => result
  */
-export type DataFirst<TData, TOptions, TReturn> = (
-  data: TData,
-  options?: TOptions
-) => TReturn;
+export type DataFirst<TData, TOptions, TReturn> = (data: TData, options?: TOptions) => TReturn;
 
 /**
  * Data-last overload: function(options) => (data) => result
  * Also known as curried form
  */
-export type DataLast<TData, TOptions, TReturn> = (
-  options: TOptions
-) => (data: TData) => TReturn;
+export type DataLast<TData, TOptions, TReturn> = (options: TOptions) => (data: TData) => TReturn;
 
 /**
  * Dual API that supports both data-first and data-last
@@ -72,10 +67,7 @@ export function createDualApi<TData, TOptions, TReturn>(
     ) {
       // Ambiguous - could be data with default options
       // For array data, treat as data-first
-      return implementation(
-        dataOrOptions as TData,
-        {} as TOptions
-      );
+      return implementation(dataOrOptions as TData, {} as TOptions);
     }
 
     // Otherwise, it's data-last/curried form

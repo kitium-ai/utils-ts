@@ -10,6 +10,23 @@ npm install @kitiumai/utils-ts
 pnpm add @kitiumai/utils-ts
 ```
 
+## Standalone Mode
+
+By default, this package integrates with other KitiumAI packages (`@kitiumai/logger`, `@kitiumai/error`). For a standalone version with zero external dependencies:
+
+```typescript
+import { setUtilsConfig } from '@kitiumai/utils-ts';
+
+// Disable integrations for standalone usage
+setUtilsConfig({ standalone: true });
+```
+
+Or build a standalone version:
+
+```bash
+pnpm run build:standalone
+```
+
 ## Features
 
 ### Type Utilities (74+ types)

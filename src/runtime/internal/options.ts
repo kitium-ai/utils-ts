@@ -51,12 +51,7 @@ export function normalizeSimpleOption<T extends object, K extends keyof T>(
   defaults: T
 ): T {
   // If input is a simple value (not an object or is explicit options)
-  if (
-    input === undefined ||
-    input === null ||
-    typeof input !== 'object' ||
-    Array.isArray(input)
-  ) {
+  if (input === undefined || input === null || typeof input !== 'object' || Array.isArray(input)) {
     return {
       ...defaults,
       [key]: input,
@@ -151,10 +146,10 @@ export function mergeErrorOptions<T extends ErrorHandlingOptions>(
  */
 export function validateRequired<T extends object>(
   options: T,
-  requiredKeys: (keyof T)[],
+  requiredKeys: Array<keyof T>,
   functionName: string
 ): asserts options is T {
-  const missing: (keyof T)[] = [];
+  const missing: Array<keyof T> = [];
 
   for (const key of requiredKeys) {
     if (options[key] === undefined) {
@@ -163,8 +158,6 @@ export function validateRequired<T extends object>(
   }
 
   if (missing.length > 0) {
-    throw new Error(
-      `${functionName} requires options: ${missing.map(String).join(', ')}`
-    );
+    throw new Error(`${functionName} requires options: ${missing.map(String).join(', ')}`);
   }
 }

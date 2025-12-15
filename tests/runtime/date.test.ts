@@ -22,7 +22,7 @@ import {
 describe('date', () => {
   describe('formatDate', () => {
     it('should format date to ISO string by default', () => {
-      const date = new Date(2024, 0, 1);
+      const date = new Date('2024-01-01T00:00:00.000Z');
       const formatted = formatDate(date);
       expect(formatted).toContain('2024');
     });

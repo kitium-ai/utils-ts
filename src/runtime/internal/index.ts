@@ -4,30 +4,28 @@
  */
 
 export {
-  createErrorHandler,
-  type ErrorContext,
-  type ErrorStrategy,
-  StandardErrorHandler,
-} from './error-handler.js';
-
-export {
   createDualApi,
   createDualApiStrict,
   type DataFirst,
   type DataLast,
   type DualAPI,
 } from './curry-helper.js';
-
 export {
-  createOptionNormalizer,
-  createSimpleOptionNormalizer,
-  mergeErrorOptions,
-  normalizeOptions,
-  normalizeSimpleOption,
-  validateRequired,
-} from './options.js';
-
+  createError,
+  type ErrorFactory,
+  getErrorFactory,
+  resetErrorFactory,
+  setErrorFactory,
+  UtilsErrorFactory,
+} from './error-factory.js';
 export {
+  createErrorHandler,
+  type ErrorContext,
+  type ErrorStrategy,
+  StandardErrorHandler,
+} from './error-handler.js';
+export {
+  type AnyObject,
   excludeKeys,
   getAllProperties,
   getNestedProperty,
@@ -42,14 +40,12 @@ export {
   mergeObjects,
   sameStructure,
   shallowClone,
-  type AnyObject,
 } from './object-utils.js';
-
 export {
-  createError,
-  getErrorFactory,
-  resetErrorFactory,
-  setErrorFactory,
-  UtilsErrorFactory,
-  type ErrorFactory,
-} from './error-factory.js';
+  createOptionNormalizer,
+  createSimpleOptionNormalizer,
+  mergeErrorOptions,
+  normalizeOptions,
+  normalizeSimpleOption,
+  validateRequired,
+} from './options.js';

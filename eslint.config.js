@@ -20,6 +20,8 @@ export default [
       ],
       // Disabled temporarily due to eslint-plugin-import relying on CJS-only minimatch.
       'import/order': 'off',
+      // Disable object injection sink warnings - false positives in utility functions
+      'security/detect-object-injection': 'off',
     },
   },
 ];

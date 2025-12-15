@@ -31,7 +31,12 @@ export function isPlainObject(value: unknown): value is AnyObject {
   }
 
   // Check for built-in objects
-  if (value instanceof Date || value instanceof RegExp || value instanceof Map || value instanceof Set) {
+  if (
+    value instanceof Date ||
+    value instanceof RegExp ||
+    value instanceof Map ||
+    value instanceof Set
+  ) {
     return false;
   }
 
@@ -51,10 +56,10 @@ export function isPlainObject(value: unknown): value is AnyObject {
  * ```
  */
 export function hasProperty<T extends AnyObject, K extends PropertyKey>(
-  obj: T,
+  object: T,
   key: K
 ): key is K & keyof T {
-  return Object.prototype.hasOwnProperty.call(obj, key);
+  return Object.prototype.hasOwnProperty.call(object, key);
 }
 
 /**
@@ -66,12 +71,12 @@ export function hasProperty<T extends AnyObject, K extends PropertyKey>(
  * hasProperties({ a: 1 }) // true
  * ```
  */
-export function hasProperties(obj: unknown): obj is AnyObject {
-  if (!isPlainObject(obj)) {
+export function hasProperties(object: unknown): object is AnyObject {
+  if (!isPlainObject(object)) {
     return false;
   }
 
-  return Object.keys(obj).length > 0;
+  return Object.keys(object).length > 0;
 }
 
 /**
@@ -83,11 +88,8 @@ export function hasProperties(obj: unknown): obj is AnyObject {
  * getProperty(obj, 'a'); // { b: { c: 1 } }
  * ```
  */
-export function getProperty<T extends AnyObject, K extends keyof T>(
-  obj: T,
-  key: K
-): T[K] {
-  return obj[key];
+export function getProperty<T extends AnyObject, K extends keyof T>(object: T, key: K): T[K] {
+  return object[key];
 }
 
 /**
@@ -101,12 +103,12 @@ export function getProperty<T extends AnyObject, K extends keyof T>(
  * ```
  */
 export function getNestedProperty<T = unknown>(
-  obj: unknown,
+  object: unknown,
   path: string,
   defaultValue?: T
 ): T | undefined {
   const keys = path.split('.');
-  let current: unknown = obj;
+  let current: unknown = object;
 
   for (const key of keys) {
     if (current === null || typeof current !== 'object') {
@@ -130,10 +132,10 @@ export function getNestedProperty<T = unknown>(
  * ```
  */
 export function getPropertyDescriptor<T extends AnyObject>(
-  obj: T,
+  object: T,
   key: keyof T
 ): PropertyDescriptor | undefined {
-  return Object.getOwnPropertyDescriptor(obj, key);
+  return Object.getOwnPropertyDescriptor(object, key);
 }
 
 /**
@@ -145,11 +147,8 @@ export function getPropertyDescriptor<T extends AnyObject>(
  * isEnumerable(obj, 'a'); // true
  * ```
  */
-export function isEnumerable<T extends AnyObject>(
-  obj: T,
-  key: keyof T
-): boolean {
-  const descriptor = getPropertyDescriptor(obj, key);
+export function isEnumerable<T extends AnyObject>(object: T, key: keyof T): boolean {
+  const descriptor = getPropertyDescriptor(object, key);
   return descriptor?.enumerable === true;
 }
 
@@ -162,13 +161,13 @@ export function isEnumerable<T extends AnyObject>(
  * getAllProperties(obj); // ['a', 'b']
  * ```
  */
-export function getAllProperties(obj: unknown): PropertyKey[] {
-  if (!isPlainObject(obj)) {
+export function getAllProperties(object: unknown): PropertyKey[] {
+  if (!isPlainObject(object)) {
     return [];
   }
 
-  const names = Object.getOwnPropertyNames(obj);
-  const symbols = Object.getOwnPropertySymbols(obj);
+  const names = Object.getOwnPropertyNames(object);
+  const symbols = Object.getOwnPropertySymbols(object);
   return [...names, ...symbols];
 }
 
@@ -182,13 +181,13 @@ export function getAllProperties(obj: unknown): PropertyKey[] {
  * sameStructure({ a: 1 }, { b: 1 }); // false
  * ```
  */
-export function sameStructure(obj1: unknown, obj2: unknown): boolean {
-  if (!isPlainObject(obj1) || !isPlainObject(obj2)) {
+export function sameStructure(object1: unknown, object2: unknown): boolean {
+  if (!isPlainObject(object1) || !isPlainObject(object2)) {
     return false;
   }
 
-  const keys1 = Object.keys(obj1).sort();
-  const keys2 = Object.keys(obj2).sort();
+  const keys1 = Object.keys(object1).sort();
+  const keys2 = Object.keys(object2).sort();
 
   if (keys1.length !== keys2.length) {
     return false;
@@ -212,9 +211,9 @@ export function mergeObjects<T extends AnyObject = AnyObject>(
 ): Partial<T> {
   const result: AnyObject = {};
 
-  for (const obj of objects) {
-    if (isPlainObject(obj)) {
-      Object.assign(result, obj);
+  for (const object of objects) {
+    if (isPlainObject(object)) {
+      Object.assign(result, object);
     }
   }
 
@@ -230,12 +229,12 @@ export function mergeObjects<T extends AnyObject = AnyObject>(
  * isEmpty({ a: 1 }); // false
  * ```
  */
-export function isEmpty(obj: unknown): obj is AnyObject {
-  if (!isPlainObject(obj)) {
+export function isEmpty(object: unknown): object is AnyObject {
+  if (!isPlainObject(object)) {
     return false;
   }
 
-  return Object.keys(obj).length === 0;
+  return Object.keys(object).length === 0;
 }
 
 /**
@@ -249,12 +248,12 @@ export function isEmpty(obj: unknown): obj is AnyObject {
  * cloned.b.c = 3; // Does affect obj.b.c
  * ```
  */
-export function shallowClone<T extends AnyObject>(obj: T): T {
-  if (Array.isArray(obj)) {
-    return [...obj] as unknown as T;
+export function shallowClone<T extends AnyObject>(object: T): T {
+  if (Array.isArray(object)) {
+    return [...object] as unknown as T;
   }
 
-  return { ...obj };
+  return { ...object };
 }
 
 /**
@@ -268,10 +267,10 @@ export function shallowClone<T extends AnyObject>(obj: T): T {
  * ```
  */
 export function excludeKeys<T extends AnyObject, K extends keyof T>(
-  obj: T,
+  object: T,
   keysToExclude: K[]
 ): Omit<T, K> {
-  const result = { ...obj };
+  const result = { ...object };
   for (const key of keysToExclude) {
     delete result[key];
   }
@@ -289,13 +288,13 @@ export function excludeKeys<T extends AnyObject, K extends keyof T>(
  * ```
  */
 export function includeKeys<T extends AnyObject, K extends keyof T>(
-  obj: T,
+  object: T,
   keysToInclude: K[]
 ): Pick<T, K> {
   const result = {} as Pick<T, K>;
   for (const key of keysToInclude) {
-    if (hasProperty(obj, key)) {
-      result[key] = obj[key];
+    if (hasProperty(object, key)) {
+      result[key] = object[key];
     }
   }
   return result;

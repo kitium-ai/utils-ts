@@ -3,15 +3,14 @@
  * Enables dependency injection and custom error handling strategies
  */
 
-import type { UtilsErrorInit } from '../error.js';
-import { UtilsError } from '../error.js';
+import { UtilsError, type UtilsErrorInit } from '../error.js';
 import type { ErrorContext } from './error-handler.js';
 
 /**
  * Factory interface for creating errors
  * Allows for different implementations (e.g., KitiumErrorFactory)
  */
-export interface ErrorFactory {
+export type ErrorFactory = {
   /**
    * Create an error from context
    */
@@ -21,7 +20,7 @@ export interface ErrorFactory {
    * Check if an error was created by this factory
    */
   isFactoryError(error: unknown): boolean;
-}
+};
 
 /**
  * Default error factory for utils-ts package

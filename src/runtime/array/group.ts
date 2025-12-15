@@ -4,8 +4,8 @@
  */
 
 import type { ErrorHandlingOptions } from '../error.js';
-import { ok, type Result } from '../result.js';
 import { createErrorHandler } from '../internal/error-handler.js';
+import { ok, type Result } from '../result.js';
 
 /**
  * Options for groupBy function
@@ -27,7 +27,9 @@ export type GroupByReturn<T, O> = O extends { onError: 'return' }
  * Note: We use a generic handler since the specific type is determined at call time
  */
 function createGroupByErrorHandler<T>(): ReturnType<typeof createErrorHandler<GroupByOptions<T>>> {
+  // We need to use 'any' for the default selector since it's a placeholder
   return createErrorHandler<GroupByOptions<T>>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     { selector: '' as any, allowUndefined: false, onError: 'throw' as const },
     (options) => ({
       code: 'GROUP_BY_KEY_MISSING' as const,
@@ -41,10 +43,7 @@ function createGroupByErrorHandler<T>(): ReturnType<typeof createErrorHandler<Gr
  * Normalize groupBy options
  */
 function normalizeGroupByOptions<T>(
-  selectorOrOptions:
-    | keyof T
-    | ((item: T) => string | number | undefined)
-    | GroupByOptions<T>
+  selectorOrOptions: keyof T | ((item: T) => string | number | undefined) | GroupByOptions<T>
 ): GroupByOptions<T> {
   if (
     typeof selectorOrOptions === 'function' ||
@@ -93,7 +92,7 @@ function groupByImpl<T>(
     }
 
     const keyAsString = String(key);
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
     (result[keyAsString] ??= []).push(item);
   }
 
@@ -135,17 +134,10 @@ export function groupBy<T, O extends GroupByOptions<T> & { onError?: 'throw' | u
   options: O
 ): GroupByReturn<T, O>;
 export function groupBy<T>(
-  selector:
-    | keyof T
-    | ((item: T) => string | number | undefined)
-    | GroupByOptions<T>
+  selector: keyof T | ((item: T) => string | number | undefined) | GroupByOptions<T>
 ): (array: T[]) => Record<string, T[]> | Result<Record<string, T[]>>;
 export function groupBy<T>(
-  arrayOrSelector:
-    | T[]
-    | keyof T
-    | ((item: T) => string | number | undefined)
-    | GroupByOptions<T>,
+  arrayOrSelector: T[] | keyof T | ((item: T) => string | number | undefined) | GroupByOptions<T>,
   selectorOrOptions?: keyof T | ((item: T) => string | number | undefined) | GroupByOptions<T>
 ):
   | Record<string, T[]>

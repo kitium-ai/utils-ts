@@ -137,7 +137,6 @@ function isEqualArrays(arrayA: readonly unknown[], arrayB: readonly unknown[]): 
   }
 
   for (let index = 0; index < arrayA.length; index++) {
-    // eslint-disable-next-line security/detect-object-injection
     if (!isEqual(arrayA[index], arrayB[index])) {
       return false;
     }
@@ -160,7 +159,6 @@ function isEqualObjects(
     if (!Object.prototype.hasOwnProperty.call(objectB, key)) {
       return false;
     }
-    // eslint-disable-next-line security/detect-object-injection
     if (!isEqual(objectA[key], objectB[key])) {
       return false;
     }

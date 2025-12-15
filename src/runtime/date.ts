@@ -6,33 +6,45 @@
  * Format a date to a string
  *
  * @param date - The date to format
- * @param format - Format string (default: ISO string)
+ * @param format - Format string or Intl options (default: ISO string)
+ * @param locale - Locale for Intl formatting (default: 'en-US')
  * @returns Formatted date string
  *
  * @example
  * ```ts
  * formatDate(new Date(2024, 0, 1), 'YYYY-MM-DD') // '2024-01-01'
+ * formatDate(new Date(2024, 0, 1), { dateStyle: 'full' }, 'en-US') // 'Monday, January 1, 2024'
+ * formatDate(new Date(2024, 0, 1), { dateStyle: 'full' }, 'de-DE') // 'Montag, 1. Januar 2024'
  * ```
  */
-export function formatDate(date: Date, format = 'ISO'): string {
-  if (format === 'ISO') {
-    return date.toISOString();
+export function formatDate(
+  date: Date,
+  format: string | Intl.DateTimeFormatOptions = 'ISO',
+  locale = 'en-US'
+): string {
+  if (typeof format === 'string') {
+    if (format === 'ISO') {
+      return date.toISOString();
+    }
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return format
+      .replace('YYYY', String(year))
+      .replace('MM', month)
+      .replace('DD', day)
+      .replace('HH', hours)
+      .replace('mm', minutes)
+      .replace('ss', seconds);
   }
 
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
-
-  return format
-    .replace('YYYY', String(year))
-    .replace('MM', month)
-    .replace('DD', day)
-    .replace('HH', hours)
-    .replace('mm', minutes)
-    .replace('ss', seconds);
+  // Use Intl.DateTimeFormat for i18n support
+  return new Intl.DateTimeFormat(locale, format).format(date);
 }
 
 /**

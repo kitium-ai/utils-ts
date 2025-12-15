@@ -3,37 +3,8 @@
  * Organized into focused submodules while maintaining public API compatibility
  */
 
-export {
-  chunk,
-  type ChunkOptions,
-  type ChunkReturn,
-} from './chunk.js';
-
-export {
-  countBy,
-  groupBy,
-  keyBy,
-  type GroupByOptions,
-  type GroupByReturn,
-} from './group.js';
-
-export {
-  difference,
-  intersection,
-  partition,
-  unique,
-  uniqueBy,
-  union,
-  without,
-} from './set-ops.js';
-
-export {
-  compact,
-  flatten,
-  flattenDeep,
-  flatMap,
-} from './transform.js';
-
+export { chunk, type ChunkOptions, type ChunkReturn } from './chunk.js';
+export { countBy, groupBy, type GroupByOptions, type GroupByReturn, keyBy } from './group.js';
 export {
   arraysEqual,
   drop,
@@ -47,9 +18,14 @@ export {
   unzip,
   zip,
 } from './query.js';
-
 export {
-  range,
-  sample,
-  shuffle,
-} from './utils.js';
+  difference,
+  intersection,
+  partition,
+  union,
+  unique,
+  uniqueBy,
+  without,
+} from './set-ops.js';
+export { compact, flatMap, flatten, flattenDeep } from './transform.js';
+export { range, sample, shuffle } from './utils.js';

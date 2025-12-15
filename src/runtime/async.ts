@@ -46,6 +46,7 @@ export async function retry<T>(
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   throw lastError!;
 }
 
@@ -59,7 +60,7 @@ export function timeout<T>(
 ): Promise<T> {
   return Promise.race([
     promise,
-    new Promise<T>((_, reject) => {
+    new Promise<T>((_resolve, reject) => {
       setTimeout(() => reject(new Error(message)), ms);
     }),
   ]);
@@ -68,7 +69,7 @@ export function timeout<T>(
 /**
  * Run promises in parallel
  */
-export async function parallel<T>(fns: Array<() => Promise<T>>): Promise<T[]> {
+export function parallel<T>(fns: Array<() => Promise<T>>): Promise<T[]> {
   return Promise.all(fns.map((function_) => function_()));
 }
 
@@ -99,9 +100,10 @@ export async function concurrency<T, R>(
     if (item === undefined) {
       continue;
     }
-    const promise = function_(item).then((result) => {
+    const promise = (async () => {
+      const result = await function_(item);
       results[index] = result;
-    });
+    })();
 
     executing.push(promise);
 
@@ -126,10 +128,12 @@ export function promisify<TArguments extends unknown[], R>(
 ): (...args: TArguments) => Promise<R> {
   return (...args: TArguments) => {
     return new Promise((resolve, reject) => {
+      // eslint-disable-next-line promise/prefer-await-to-callbacks
       function_(...args, (error, result) => {
         if (error) {
           reject(error);
         } else {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           resolve(result!);
         }
       });
@@ -180,9 +184,10 @@ export function deferred<T>(): Deferred<T> {
   let resolve!: (value: T) => void;
   let reject!: (error: Error) => void;
 
-  const promise = new Promise<T>((res, rej) => {
-    resolve = res;
-    reject = rej;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const promise = new Promise<T>((_resolve: any, _reject: any) => {
+    resolve = _resolve;
+    reject = _reject;
   });
 
   return { promise, resolve, reject };

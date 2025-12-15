@@ -164,12 +164,16 @@ export function minBy<T>(array: T[], function_: (item: T) => number): T | undefi
   if (array.length === 0) {
     return undefined;
   }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let minValue = function_(array[0]!);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let minItem = array[0]!;
   for (let index = 1; index < array.length; index++) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const value = function_(array[index]!);
     if (value < minValue) {
       minValue = value;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       minItem = array[index]!;
     }
   }
@@ -193,12 +197,16 @@ export function maxBy<T>(array: T[], function_: (item: T) => number): T | undefi
   if (array.length === 0) {
     return undefined;
   }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let maxValue = function_(array[0]!);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let maxItem = array[0]!;
   for (let index = 1; index < array.length; index++) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const value = function_(array[index]!);
     if (value > maxValue) {
       maxValue = value;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       maxItem = array[index]!;
     }
   }

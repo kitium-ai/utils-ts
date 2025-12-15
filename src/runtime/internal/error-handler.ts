@@ -3,8 +3,13 @@
  * across modules while providing extensible error strategies.
  */
 
-import { createUtilsError, type ErrorHandlingOptions, type UtilsErrorCode, type UtilsErrorInit } from '../error.js';
-import { err, ok, type Result } from '../result.js';
+import {
+  createUtilsError,
+  type ErrorHandlingOptions,
+  type UtilsErrorCode,
+  type UtilsErrorInit,
+} from '../error.js';
+import { err as error, ok, type Result } from '../result.js';
 
 /**
  * Strategy for deciding how to handle errors
@@ -14,12 +19,12 @@ export type ErrorStrategy = 'throw' | 'return';
 /**
  * Error handling context information
  */
-export interface ErrorContext {
+export type ErrorContext = {
   code: UtilsErrorCode;
   message: string;
   details?: Record<string, unknown>;
   cause?: Error;
-}
+};
 
 /**
  * Creates a UtilsErrorInit from context
@@ -64,13 +69,10 @@ function createErrorInit(context: ErrorContext): UtilsErrorInit {
  * const result = handler.handleError({ size: 0 });
  * ```
  */
-export class StandardErrorHandler<
-  TOptions extends ErrorHandlingOptions,
-  TValue = unknown
-> {
+export class StandardErrorHandler<TOptions extends ErrorHandlingOptions, TValue = unknown> {
   constructor(
-    private defaultOptions: TOptions,
-    private errorFactory: (options: TOptions) => ErrorContext
+    private readonly defaultOptions: TOptions,
+    private readonly errorFactory: (options: TOptions) => ErrorContext
   ) {}
 
   /**
@@ -87,14 +89,12 @@ export class StandardErrorHandler<
    * Validate options and handle errors using the configured strategy
    * Returns the result value or throws/returns error based on onError strategy
    */
-  handleError(
-    options: TOptions & { onError: ErrorStrategy }
-  ): Result<never> | never {
+  handleError(options: TOptions & { onError: ErrorStrategy }): Result<never> | never {
     const errorContext = this.errorFactory(options);
     const utilsError = createUtilsError(createErrorInit(errorContext));
 
     if (options.onError === 'return') {
-      return err(utilsError);
+      return error(utilsError);
     }
 
     throw utilsError;
@@ -142,10 +142,7 @@ export class StandardErrorHandler<
  * );
  * ```
  */
-export function createErrorHandler<
-  TOptions extends ErrorHandlingOptions,
-  TValue = unknown
->(
+export function createErrorHandler<TOptions extends ErrorHandlingOptions, TValue = unknown>(
   defaultOptions: TOptions,
   errorFactory: (options: TOptions) => ErrorContext
 ): StandardErrorHandler<TOptions, TValue> {

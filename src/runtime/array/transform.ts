@@ -48,11 +48,8 @@ export function flattenDeep<T>(array: T[]): T[] {
  * flatMap([1, 2, 3], x => [x, x * 2]) // [1, 2, 2, 4, 3, 6]
  * ```
  */
-export function flatMap<T, R>(
-  array: T[],
-  function_: (item: T, index: number) => R | R[]
-): R[] {
-  return array.flatMap(function_);
+export function flatMap<T, R>(array: T[], function_: (item: T, index: number) => R | R[]): R[] {
+  return array.flatMap((item, index) => function_(item, index));
 }
 
 /**

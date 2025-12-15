@@ -1,5 +1,5 @@
 import { bench, describe } from 'vitest';
-import { chunk, groupBy, unique, flattenDeep } from '../src/runtime/array.js';
+import { chunk, groupBy, unique, flattenDeep } from '../src/runtime/array/index.js';
 
 describe('array benchmarks', () => {
   const largeArray = Array.from({ length: 10000 }, (_, i) => i);

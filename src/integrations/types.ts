@@ -75,7 +75,7 @@ function getValidators(): any {
     try {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const typesModule = require('@kitiumai/types');
-      validators = typesModule.VALIDATORS || null;
+      validators = typesModule.VALIDATORS ?? null;
     } catch {
       validators = null;
     }
@@ -93,9 +93,9 @@ export const emailUtils = {
       return false;
     }
     // Use VALIDATORS from @kitiumai/types if available
-    const validators = getValidators();
-    if (validators?.email) {
-      const result = validators.email.safeParse(email);
+    const loadedValidators = getValidators();
+    if (loadedValidators?.email) {
+      const result = loadedValidators.email.safeParse(email);
       return result.success;
     }
     // Fallback to basic regex if VALIDATORS.email not available

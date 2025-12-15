@@ -9,6 +9,9 @@
  * - @kitiumai/config
  */
 
+// Export configuration utilities
+export * from './config.js';
+
 // Export all type utilities
 export * from './types/index.js';
 

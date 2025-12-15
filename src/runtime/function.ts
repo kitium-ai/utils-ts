@@ -88,6 +88,7 @@ export function memoize<T extends UnknownFunction>(
     const key = resolver ? resolver(...args) : JSON.stringify(args);
 
     if (cache.has(key)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return cache.get(key)!;
     }
 

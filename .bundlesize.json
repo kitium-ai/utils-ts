@@ -1,0 +1,14 @@
+[
+  {
+    "path": "dist/index.js",
+    "maxSize": "50 kB"
+  },
+  {
+    "path": "dist/runtime/index.js",
+    "maxSize": "40 kB"
+  },
+  {
+    "path": "dist/types/index.js",
+    "maxSize": "10 kB"
+  }
+]

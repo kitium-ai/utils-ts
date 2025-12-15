@@ -1,5 +1,5 @@
 import { bench, describe } from 'vitest';
-import { deepMerge, deepClone, isEqual } from '../src/runtime/object.js';
+import { deepMerge, deepClone, isEqual } from '../src/runtime/object/index.js';
 
 describe('object benchmarks', () => {
   const largeObj = Object.fromEntries(

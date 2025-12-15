@@ -4,11 +4,8 @@
  */
 
 export { deepClone, deepMerge, defaultsDeep, isEqual } from './deep.js';
-
-export { invert, mapKeys, mapValues } from './transform.js';
-
 export { get, has, omit, pick, set } from './query.js';
-
+export { invert, mapKeys, mapValues } from './transform.js';
 export {
   defaults,
   entries,

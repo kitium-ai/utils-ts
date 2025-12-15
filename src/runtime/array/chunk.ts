@@ -4,8 +4,8 @@
  */
 
 import type { ErrorHandlingOptions } from '../error.js';
-import { type Result } from '../result.js';
 import { createErrorHandler } from '../internal/error-handler.js';
+import { type Result } from '../result.js';
 
 /**
  * Options for chunk function
@@ -40,9 +40,7 @@ const chunkErrorHandler = createErrorHandler<ChunkOptions>(
 /**
  * Normalize chunk options - handle simple number or full options object
  */
-function normalizeChunkOptions(
-  sizeOrOptions: number | ChunkOptions | undefined
-): ChunkOptions {
+function normalizeChunkOptions(sizeOrOptions: number | ChunkOptions | undefined): ChunkOptions {
   if (typeof sizeOrOptions === 'number') {
     return { size: sizeOrOptions, onError: 'throw' as const };
   }
@@ -112,9 +110,7 @@ export function chunk<T, O extends ChunkOptions & { onError?: 'throw' | undefine
   array: T[],
   options: O
 ): ChunkReturn<T, O>;
-export function chunk<T>(
-  options: number | ChunkOptions
-): (array: T[]) => T[][] | Result<T[][]>;
+export function chunk<T>(options: number | ChunkOptions): (array: T[]) => T[][] | Result<T[][]>;
 export function chunk<T>(
   arrayOrOptions: T[] | number | ChunkOptions,
   sizeOrOptions?: number | ChunkOptions

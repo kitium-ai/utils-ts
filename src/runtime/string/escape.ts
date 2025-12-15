@@ -27,7 +27,7 @@ export function escapeHtml(string_: string): string {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     "'": '&#39;',
   };
-  return string_.replace(/[&<>"']/g, (char) => map[char] || char);
+  return string_.replace(/[&<>"']/g, (char) => map[char] ?? char);
 }
 
 /**
@@ -55,5 +55,5 @@ export function unescapeHtml(string_: string): string {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     '&#39;': "'",
   };
-  return string_.replace(/&(?:amp|lt|gt|quot|#39);/g, (entity) => map[entity] || entity);
+  return string_.replace(/&(?:amp|lt|gt|quot|#39);/g, (entity) => map[entity] ?? entity);
 }
